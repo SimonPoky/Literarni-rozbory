@@ -3,561 +3,454 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Literární Rozbor Manager (Dle zadání)</title>
+    <title>Literární Rozbor Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fc;
-        }
-        .container {
-            max-width: 1200px;
-        }
-        h1 {
-            border-bottom: 2px solid #3b82f6;
-            padding-bottom: 0.5rem;
-        }
-        h2 {
-            margin-top: 1.5rem;
-            color: #1d4ed8;
-        }
-        h3 {
-            border-left: 4px solid #93c5fd;
-            padding-left: 0.75rem;
-            margin-top: 1rem;
-            font-weight: 600;
-        }
-        label {
-            font-weight: 500;
-            display: block;
-            margin-top: 1rem;
-            margin-bottom: 0.25rem;
-            color: #374151;
-        }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-            transition: border-color 0.2s;
-        }
-        input[type="text"]:focus, textarea:focus {
-            border-color: #3b82f6;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-        }
-        textarea {
-            min-height: 80px;
-        }
-        .section-box {
-            background-color: #ffffff;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            text-align: center;
-            height: 48px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1; 
-            white-space: nowrap; 
-        }
-        .btn-primary { background-color: #3b82f6; color: white; }
-        .btn-primary:hover { background-color: #2563eb; }
-        .btn-secondary { background-color: #6b7280; color: white; }
-        .btn-secondary:hover { background-color: #4b5563; }
-        .btn-green { background-color: #10b981; color: white; }
-        .btn-green:hover { background-color: #059669; }
-        .btn-red { background-color: #ef4444; color: white; }
-        .btn-red:hover { background-color: #dc2626; }
-
-        .copy-btn {
-            background-color: #3b82f6;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .copy-btn:hover {
-            background-color: #2563eb;
-        }
-        .result-container {
-            background-color: #f3f4f6;
-            border: 1px solid #d1d5db;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            white-space: pre-wrap;
-            font-family: 'Courier New', Courier, monospace; 
-            color: #1f2937;
-        }
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            width: 80%; 
-            max-width: 1000px;
-            max-height: 90%;
-            overflow-y: auto;
-            position: relative;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #ef4444;
-        }
-        .review-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .review-item:last-child {
-            border-bottom: none;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        textarea::-webkit-scrollbar { width: 8px; }
+        textarea::-webkit-scrollbar-track { background: #f1f1f1; }
+        textarea::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
     </style>
 </head>
-<body class="p-4 sm:p-8">
-    <div id="auth-info" class="text-xs text-right mb-2 text-gray-500">
-        Status: Lokální úložiště (localStorage) je aktivní.
-    </div>
+<body class="bg-slate-50 text-slate-800">
 
-    <div class="container mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 relative">
-        
-        <div class="lg:col-span-2">
-            <h1 class="text-3xl font-bold text-gray-800 mb-6">📝 Správce Rozborů (Dle zadání)</h1>
-            <p class="text-gray-600 mb-6">Vaše práce se ukládá automaticky do prohlížeče.</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="flex justify-between items-center mb-8 border-b border-slate-200 pb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900 tracking-tight">📝 Rozbor Manager</h1>
+                <p class="text-sm text-slate-500 mt-1">Auto-save enabled (LocalStorage)</p>
+            </div>
+            <div class="text-right">
+                 <a href="https://github.com/SimonPoky/Literarni-rozbory" target="_blank" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-2">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    SimonPoky/Literarni-rozbory
+                </a>
+            </div>
+        </header>
 
-            <form id="analysis-form" class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <form id="analysis-form" class="space-y-8">
+                    <input type="hidden" name="id" id="entry-id">
 
-                <!-- I. TEXT A JEHO SLOŽKY -->
-                <div class="section-box">
-                    <h2 class="text-2xl font-semibold mb-4">1. Literární druh a žánr</h2>
-                    <input type="hidden" id="edit-index">
-                    
-                    <label for="nazev_dila">Název díla:</label>
-                    <input type="text" id="nazev_dila" placeholder="Např. Kytice" required>
-                    
-                    <label for="autor">Autor:</label>
-                    <input type="text" id="autor" placeholder="Např. Karel Jaromír Erben" required>
+                    <!-- 1. TEXT A JEHO SLOŽKY -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">I. TEXT A JEHO SLOŽKY</h2>
+                        
+                        <!-- Základ -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="col-span-2 md:col-span-1">
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Název díla</label>
+                                <input type="text" name="title" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2">
+                            </div>
+                            <div class="col-span-2 md:col-span-1">
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Autor</label>
+                                <input type="text" name="author" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2">
+                            </div>
+                        </div>
 
-                    <label for="literarni_druh">Literární druh (lyrika, próza, drama...):</label>
-                    <input type="text" id="literarni_druh">
-
-                    <label for="literarni_zanr">Literární žánr (román, balada...):</label>
-                    <input type="text" id="literarni_zanr">
-
-                    <h2 class="text-2xl font-semibold mt-6 mb-4">2. Kontext</h2>
-                    <label for="kontext_autora">Autor, recepce, období, směr:</label>
-                    <textarea id="kontext_autora" placeholder="Informace o autorovi, přijetí díla, literární směr."></textarea>
-                </div>
-
-                <!-- II. OBSAH -->
-                <div class="section-box">
-                    <h2 class="text-2xl font-semibold mb-4">3. Obsah</h2>
-                    
-                    <h3 class="text-lg">A. Téma</h3>
-                    <label for="hlavni_tema">Hlavní a vedlejší téma:</label>
-                    <textarea id="hlavni_tema" placeholder="O čem dílo je (hlavní i vedlejší témata)."></textarea>
-
-                    <h3 class="text-lg">B. Věcný obsah</h3>
-                    <label for="hlavni_postavy">Postavy (hlavní/vedlejší, charakteristika, vztahy):</label>
-                    <textarea id="hlavni_postavy" placeholder="Jací jsou, proč takoví jsou, jak se mění."></textarea>
-                    
-                    <label for="vypravec">Vypravěč / Lyrický subjekt:</label>
-                    <input type="text" id="vypravec" placeholder="Ich-forma, vševědoucí, vztah ke čtenáři.">
-                    
-                    <label for="casoprostor">Časoprostor (čas a prostředí):</label>
-                    <textarea id="casoprostor" placeholder="Místní a sociální prostředí, doba děje."></textarea>
-
-                    <label for="dej">Děj/Dění:</label>
-                    <textarea id="dej" placeholder="Převyprávění, klíčové motivy, zápletka, rozuzlení."></textarea>
-                    
-                    <label for="myslenkovy_obsah">Myšlenkový a emoční obsah:</label>
-                    <textarea id="myslenkovy_obsah" placeholder="Vidění světa, ponaučení, smysl, celkové působení."></textarea>
-                </div>
-
-                <!-- III. FORMA -->
-                <div class="section-box">
-                    <h2 class="text-2xl font-semibold mb-4">4. Forma</h2>
-
-                    <h3 class="text-lg">A. Kompozice</h3>
-                    <label for="clneni_textu">Členění textu (kapitoly, strofy, dějství):</label>
-                    <input type="text" id="clneni_textu">
-
-                    <label for="slohove_postupy">Slohové postupy (vyprávění, popis, úvaha...):</label>
-                    <input type="text" id="slohove_postupy" placeholder="Jejich kombinace, detailnost/náznakovost.">
-
-                    <label for="kompozicni_postupy">Kompoziční postupy (chronologický, retrospektivní...):</label>
-                    <input type="text" id="kompozicni_postupy">
-                    
-                    <label for="kompozicni_principy">Kompoziční principy (opakování, kontrast...):</label>
-                    <input type="text" id="kompozicni_principy">
-                
-                    <h3 class="text-lg mt-4">B. Výrazové prostředky</h3>
-                    <label for="neverbalni">Neverbální (ilustrace, grafika):</label>
-                    <input type="text" id="neverbalni">
-
-                    <label for="verbalni">Verbální (jazyk, slovní zásoba):</label>
-                    <textarea id="verbalni" placeholder="Spisovnost, archaismy, citové zabarvení, syntax, slovní druhy..."></textarea>
-                    
-                    <label for="figury_tropy">Figury a Tropy:</label>
-                    <textarea id="figury_tropy" placeholder="Metafory, metonymie, anafory..."></textarea>
-                </div>
-
-                <!-- IV. KOMENTÁŘ -->
-                <div class="section-box">
-                    <h2 class="text-2xl font-semibold mb-4">5. KOMENTÁŘ (Jak o textu přemýšlet)</h2>
-                    
-                    <label for="analyza">Analýza:</label>
-                    <textarea id="analyza" placeholder="Charakteristika složek textu (rozklad)."></textarea>
-                    
-                    <label for="vyklad">Výklad (PROČ to tak je, SMYSL):</label>
-                    <textarea id="vyklad" placeholder="Proč autor zvolil tento žánr? Proč se postavy chovají takto? Smysl a význam."></textarea>
-                    
-                    <label for="hodnoceni">Hodnocení:</label>
-                    <textarea id="hodnoceni" placeholder="Posouzení kladů a záporů."></textarea>
-                </div>
-
-                <div class="flex justify-center">
-                    <button type="submit" class="btn btn-primary" id="save-button">Uložit / Aktualizovat Rozbor</button>
-                    <button type="button" onclick="resetForm()" class="btn btn-secondary ml-4">Vytvořit Nový Rozbor</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Pravý sloupec - Přehled -->
-        <div class="lg:col-span-1">
-            <div class="sticky top-8">
-                <div class="section-box bg-white p-4">
-                    <h2 class="text-xl font-bold mb-4 border-b pb-2">Uložené rozbory (<span id="count">0</span>/20)</h2>
-                    <div id="review-list" class="divide-y divide-gray-200 min-h-[150px] max-h-[400px] overflow-y-auto">
-                        <!-- Dynamic content -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-blue-700 mb-1">Literární druh a žánr</label>
+                                <input type="text" name="genre_type" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="lyrika, próza, balada, román, povídka...">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-blue-700 mb-1">Kontext</label>
+                                <textarea name="context" rows="2" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="autor, recepce díla, literární období, literární směr..."></textarea>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mt-8 flex flex-col space-y-4">
-                    <button onclick="generateFinalLatex()" class="btn btn-green">Vygenerovat LaTeX Sborník</button>
-                    <button onclick="clearAll()" class="btn btn-red">Vymazat Všechna Lokální Data</button>
+                    <!-- OBSAH -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-700 mb-4 border-l-4 border-blue-500 pl-3">Obsah</h3>
+                        
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Téma</label>
+                                <textarea name="theme" rows="1" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="hlavní, vedlejší..."></textarea>
+                            </div>
+                            
+                            <div class="pl-4 border-l-2 border-slate-200 space-y-4">
+                                <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wide">Věcný obsah</h4>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Postavy</label>
+                                    <textarea name="characters" rows="2" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="hlavní/vedlejší, charakteristika, vývoj, vztahy..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Vypravěč / Lyrický subjekt</label>
+                                    <input type="text" name="narrator" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="ich-forma, vševědoucí, vztah ke čtenáři...">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Časoprostor</label>
+                                    <input type="text" name="setting" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="čas a prostředí (místní, sociální)">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Děj / Dění</label>
+                                    <textarea name="plot" rows="3" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="převyprávění, motivy, zápletka, rozuzlení..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Myšlenkový a emoční obsah</label>
+                                    <textarea name="thought_content" rows="2" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="vidění světa, ponaučení, smysl, celkové působení..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FORMA -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-700 mb-4 border-l-4 border-blue-500 pl-3">Forma</h3>
+
+                        <div class="space-y-6">
+                            <div class="pl-4 border-l-2 border-slate-200 space-y-4">
+                                <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wide">Kompozice</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Členění textu</label>
+                                        <input type="text" name="composition_structure" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="kapitoly, strofy, dějství...">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Slohové postupy</label>
+                                        <input type="text" name="style_procedures" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="vyprávění, popis, úvaha, detailnost...">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Kompoziční postupy</label>
+                                        <input type="text" name="composition_procedures" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="chronologický, retrospektivní...">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Kompoziční principy</label>
+                                        <input type="text" name="composition_principles" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="opakování, kontrast...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pl-4 border-l-2 border-slate-200 space-y-4">
+                                <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wide">Výrazové prostředky</h4>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Neverbální</label>
+                                    <input type="text" name="nonverbal" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="ilustrace, grafická úprava...">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Verbální</label>
+                                    <textarea name="verbal" rows="4" class="w-full rounded-md border-gray-300 shadow-sm border p-2" placeholder="spisovnost, archaismy, eufemismy, termíny, syntax, figury, tropy..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. KOMENTÁŘ -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">II. KOMENTÁŘ – JAK O TEXTU PŘEMÝŠLET</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-blue-700 mb-1">Analýza</label>
+                                <p class="text-xs text-slate-500 mb-1">Rozklad textu na složky a jejich charakteristika.</p>
+                                <textarea name="analysis" rows="3" class="w-full rounded-md border-gray-300 shadow-sm border p-2"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-blue-700 mb-1">Výklad (SMYSL/VÝZNAM)</label>
+                                <p class="text-xs text-slate-500 mb-1">PROČ to tak je? Proč autor zvolil tento žánr/téma/kompozici? Smysl postav, času, prostoru...</p>
+                                <textarea name="interpretation" rows="4" class="w-full rounded-md border-gray-300 shadow-sm border p-2"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-blue-700 mb-1">Hodnocení</label>
+                                <p class="text-xs text-slate-500 mb-1">Posouzení kladů a záporů.</p>
+                                <textarea name="evaluation" rows="2" class="w-full rounded-md border-gray-300 shadow-sm border p-2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 pt-4">
+                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-all transform active:scale-[0.98]">
+                            💾 Uložit Rozbor
+                        </button>
+                        <button type="button" id="btn-reset" class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg transition-colors">
+                            Nový
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="lg:col-span-1">
+                <div class="sticky top-8 space-y-6">
+                    
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                         <button type="button" id="btn-save-sidebar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
+                            💾 Rychlé uložení
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                            <h3 class="font-semibold text-slate-800">Uloženo (<span id="count">0</span>)</h3>
+                            <button id="btn-nuke" class="text-xs text-red-500 hover:text-red-700 font-medium">Smazat vše</button>
+                        </div>
+                        <div id="list-container" class="max-h-[60vh] overflow-y-auto divide-y divide-slate-100">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl border border-slate-200 p-6">
+                        <h3 class="font-bold text-lg mb-2 text-slate-700">Export</h3>
+                        <p class="text-slate-500 text-sm mb-4">Vygeneruje kompletní sborník pro XeLaTeX (Struktura dle školního zadání).</p>
+                        <button id="btn-generate" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow transition-colors flex items-center justify-center gap-2">
+                            <span>⚡ Generovat LaTeX</span>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL -->
-    <div id="result-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b pb-2">Vygenerovaný LaTeX Sborník</h2>
-            <p class="text-gray-600 mb-4">Zkopírujte kód do Overleafu (XeLaTeX).</p>
-            <button class="copy-btn mb-4" onclick="copyResultText()">Kopírovat Kód</button>
-            <textarea id="result-text" class="w-full h-96 p-4 result-container" readonly></textarea>
+    <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-4xl flex flex-col max-h-[90vh]">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 class="font-bold text-lg">LaTeX Výstup</h3>
+                <button id="btn-close-modal" class="text-slate-400 hover:text-red-500 text-2xl leading-none">&times;</button>
+            </div>
+            <div class="flex-1 p-0 relative">
+                <textarea id="output-code" class="w-full h-full min-h-[400px] p-4 font-mono text-xs bg-slate-50 resize-none focus:outline-none" readonly></textarea>
+                <button id="btn-copy" class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded shadow">
+                    Copy
+                </button>
+            </div>
         </div>
     </div>
 
-    <script>
-        const DB_KEY = 'maturitniRozboryV2';
-        let storedAnalyses = [];
+<script>
+const DB_KEY = 'maturita_storage_v3';
+const form = document.getElementById('analysis-form');
+const listContainer = document.getElementById('list-container');
+let db = JSON.parse(localStorage.getItem(DB_KEY) || '[]');
 
-        // --- LOCAL STORAGE ---
-        function loadAnalyses() {
-            try {
-                const data = localStorage.getItem(DB_KEY);
-                storedAnalyses = data ? JSON.parse(data) : [];
-            } catch (e) { storedAnalyses = []; }
-            renderReviewList();
-        }
+const saveToDb = () => {
+    try {
+        localStorage.setItem(DB_KEY, JSON.stringify(db));
+        renderList();
+    } catch (e) { alert('LocalStorage full!'); }
+};
 
-        function saveAnalyses() {
-            try { localStorage.setItem(DB_KEY, JSON.stringify(storedAnalyses)); } 
-            catch (e) { alertMessage("Chyba při ukládání (úložiště plné?)."); }
-        }
+const renderList = () => {
+    document.getElementById('count').textContent = db.length;
+    listContainer.innerHTML = db.length ? '' : '<div class="p-4 text-sm text-slate-400 text-center">Zatím nic...</div>';
+    
+    db.sort((a, b) => a.title.localeCompare(b.title)).forEach((item, idx) => {
+        const originalIdx = db.indexOf(item);
+        const el = document.createElement('div');
+        el.className = 'p-3 hover:bg-blue-50 transition-colors group flex justify-between items-center';
+        el.innerHTML = `
+            <div class="cursor-pointer flex-1 truncate" onclick="loadEntry(${originalIdx})">
+                <div class="font-medium text-slate-800 truncate">${item.title}</div>
+                <div class="text-xs text-slate-500 truncate">${item.author}</div>
+            </div>
+            <button onclick="deleteEntry(${originalIdx})" class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 p-1 ml-2 transition-opacity" title="Smazat">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+            </button>
+        `;
+        listContainer.appendChild(el);
+    });
+};
 
-        // --- UI FUNCTIONS ---
-        function saveAnalysis(event) {
-            event.preventDefault();
-            const nazev_dila = document.getElementById('nazev_dila').value.trim();
-            const autor = document.getElementById('autor').value.trim();
-            const editIndex = document.getElementById('edit-index').value;
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const entry = Object.fromEntries(formData.entries());
+    const id = formData.get('id');
 
-            if (!nazev_dila || !autor) {
-                alertMessage('Vyplňte Název díla a Autora.');
-                return;
-            }
+    if(id !== '') {
+        db[parseInt(id)] = entry;
+    } else {
+        db.push(entry);
+    }
+    
+    saveToDb();
+    resetForm();
+    showToast(id !== '' ? 'Aktualizováno' : 'Uloženo');
+});
 
-            const analysisData = {
-                title: nazev_dila,
-                author: autor,
-                literarni_druh: document.getElementById('literarni_druh').value,
-                literarni_zanr: document.getElementById('literarni_zanr').value,
-                kontext_autora: document.getElementById('kontext_autora').value,
-                hlavni_tema: document.getElementById('hlavni_tema').value,
-                hlavni_postavy: document.getElementById('hlavni_postavy').value,
-                vypravec: document.getElementById('vypravec').value,
-                casoprostor: document.getElementById('casoprostor').value,
-                dej: document.getElementById('dej').value,
-                myslenkovy_obsah: document.getElementById('myslenkovy_obsah').value,
-                clneni_textu: document.getElementById('clneni_textu').value,
-                slohove_postupy: document.getElementById('slohove_postupy').value,
-                kompozicni_postupy: document.getElementById('kompozicni_postupy').value,
-                kompozicni_principy: document.getElementById('kompozicni_principy').value,
-                neverbalni: document.getElementById('neverbalni').value,
-                verbalni: document.getElementById('verbalni').value,
-                figury_tropy: document.getElementById('figury_tropy').value,
-                analyza: document.getElementById('analyza').value,
-                vyklad: document.getElementById('vyklad').value,
-                hodnoceni: document.getElementById('hodnoceni').value,
-            };
+document.getElementById('btn-save-sidebar').addEventListener('click', () => {
+    form.requestSubmit();
+});
 
-            if (editIndex !== "") {
-                storedAnalyses[parseInt(editIndex)] = analysisData;
-                alertMessage(`Aktualizováno: ${analysisData.title}`);
-            } else {
-                storedAnalyses.push(analysisData);
-                alertMessage(`Uloženo: ${analysisData.title}`);
-            }
-            saveAnalyses();
-            renderReviewList();
-            resetForm();
-        }
+window.loadEntry = (idx) => {
+    const data = db[idx];
+    if(!data) return;
+    
+    Object.keys(data).forEach(key => {
+        const input = form.elements[key];
+        if(input) input.value = data[key];
+    });
+    
+    document.getElementById('entry-id').value = idx;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
-        window.removeAnalysis = (index) => {
-            if (confirm("Smazat tento rozbor?")) {
-                storedAnalyses.splice(index, 1);
-                saveAnalyses();
-                renderReviewList();
-            }
-        }
+window.deleteEntry = (idx) => {
+    if(confirm('Smazat navždy?')) {
+        db.splice(idx, 1);
+        saveToDb();
+        if(document.getElementById('entry-id').value == idx) resetForm();
+    }
+};
 
-        window.clearAll = () => {
-            if (confirm("Smazat VŠECHNA data?")) {
-                storedAnalyses = [];
-                saveAnalyses();
-                renderReviewList();
-            }
-        }
+const resetForm = () => {
+    form.reset();
+    document.getElementById('entry-id').value = '';
+};
 
-        window.editAnalysis = (index) => {
-            const data = storedAnalyses[index];
-            if (!data) return;
-            document.getElementById('edit-index').value = index;
-            
-            const fields = ['nazev_dila', 'autor', 'literarni_druh', 'literarni_zanr', 'kontext_autora', 
-                            'hlavni_tema', 'hlavni_postavy', 'vypravec', 'casoprostor', 'dej', 
-                            'myslenkovy_obsah', 'clneni_textu', 'slohove_postupy', 'kompozicni_postupy', 
-                            'kompozicni_principy', 'neverbalni', 'verbalni', 'figury_tropy', 
-                            'analyza', 'vyklad', 'hodnoceni'];
-            
-            fields.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.value = data[id === 'nazev_dila' ? 'title' : (id === 'autor' ? 'author' : id)] || '';
-            });
+document.getElementById('btn-reset').onclick = resetForm;
+document.getElementById('btn-nuke').onclick = () => {
+    if(confirm('VÁŽNĚ SMAZAT VŠECHNO?')) {
+        db = [];
+        saveToDb();
+        resetForm();
+    }
+};
 
-            alertMessage(`Načteno: ${data.title}`);
-            window.scrollTo(0, 0);
-        }
+const esc = (text) => {
+    if (!text) return '-';
+    return text.replace(/\\/g, '\\textbackslash{}')
+               .replace(/&/g, '\\&')
+               .replace(/%/g, '\\%')
+               .replace(/\$/g, '\\$')
+               .replace(/#/g, '\\#')
+               .replace(/_/g, '\\_')
+               .replace(/{/g, '\\{')
+               .replace(/}/g, '\\}')
+               .replace(/~/g, '\\textasciitilde{}')
+               .replace(/\^/g, '\\textasciicircum{}')
+               .replace(/\n/g, '\\\\ ');
+};
 
-        window.resetForm = () => {
-            document.getElementById('analysis-form').reset();
-            document.getElementById('edit-index').value = '';
-        }
+const genTable = (title, rows) => {
+    const lw = '5.5cm'; const cw = '10.5cm';
+    let tbl = `\\subsubsection*{${title}}\n\\begin{center}\n\\begin{tabular}{p{${lw}} p{${cw}}}\n\\toprule\\midrule\n`;
+    rows.forEach(([k, v]) => { tbl += `\\textbf{${k}:} & \\parbox[t]{${cw}}{${v || '-'}} \\\\ \n\\midrule\n`; });
+    tbl += `\\bottomrule\n\\end{tabular}\n\\end{center}\n`;
+    return tbl;
+};
 
-        function renderReviewList() {
-            const list = document.getElementById('review-list');
-            const countSpan = document.getElementById('count');
-            list.innerHTML = '';
-            countSpan.textContent = storedAnalyses.length;
-
-            if (storedAnalyses.length === 0) {
-                const p = document.createElement('p');
-                p.className = 'text-gray-500 p-4 text-center';
-                p.textContent = 'Zatím nebyly uloženy žádné rozbory.';
-                list.appendChild(p);
-                return;
-            }
-
-            const sortedAnalyses = [...storedAnalyses].sort((a, b) => a.title.localeCompare(b.title));
-            sortedAnalyses.forEach((analysis, i) => {
-                const originalIndex = storedAnalyses.findIndex(item => item.title === analysis.title && item.author === analysis.author);
-                const item = document.createElement('div');
-                item.className = 'review-item';
-                item.innerHTML = `
-                    <span class="font-medium text-gray-700">${i + 1}. ${analysis.title} (${analysis.author})</span>
-                    <div>
-                        <button onclick="editAnalysis(${originalIndex})" class="text-blue-500 hover:text-blue-700 font-semibold text-sm mr-2">Edit</button>
-                        <button onclick="removeAnalysis(${originalIndex})" class="text-red-500 hover:text-red-700 font-semibold text-sm">Smazat</button>
-                    </div>
-                `;
-                list.appendChild(item);
-            });
-        }
-
-        // --- LATEX GENERATOR ---
-        function esc(text) {
-            if (!text) return '-';
-            return text.replace(/\\/g, '\\textbackslash{}').replace(/&/g, '\\&').replace(/%/g, '\\%').replace(/\$/g, '\\$').replace(/#/g, '\\#').replace(/_/g, '\\_').replace(/{/g, '\\{').replace(/}/g, '\\}')
-                       .replace(/~/g, '\\textasciitilde{}').replace(/\^/g, '\\textasciicircum{}').replace(/\n/g, '\\\\');
-        }
-
-        const generateTableSection = (title, items) => {
-            const lw = '5cm'; const cw = '11cm'; // lw=Label Width, cw=Content Width
-            let table = `\\subsection*{${title}}\n\\begin{center}\n\\begin{tabular}{p{${lw}} p{${cw}}}\n\\toprule\\midrule\n`;
-            items.forEach(([t, c]) => { table += `\\textbf{${t}:} & \\parbox[t]{${cw}}{${c || '-'}} \\\\ \n\\midrule\n`; });
-            table += `\\bottomrule\n\\end{tabular}\n\\end{center}\n`;
-            return table;
-        };
-
-        function generateAnalysisBlock(data) {
-            return `
+const generateLatex = () => {
+    if(!db.length) return alert('Prázdno. Nic k exportu.');
+    const sorted = [...db].sort((a, b) => a.title.localeCompare(b.title));
+    
+    const content = sorted.map(d => `
 \\clearpage
-\\section*{Rozbor díla: ${esc(data.title)}}
-\\addcontentsline{toc}{section}{${esc(data.title)} (${esc(data.author)})}
+\\section*{Rozbor: ${esc(d.title)}}
+\\addcontentsline{toc}{section}{${esc(d.title)} (${esc(d.author)})}
+
 \\begin{center}
-    \\Large\\bfseries
-    CHARAKTERISTIKA, ANALÝZA A INTERPRETACE UMĚLECKÉHO TEXTU
-    \\\\
-    \\rule{\\textwidth}{1pt}
-    \\normalsize
-    \\textbf{Název díla:} ${esc(data.title)} \\quad $\\bullet$ \\quad \\textbf{Autor:} ${esc(data.author)}
+    \\Large\\bfseries Charakteristika, analýza a interpretace uměleckého textu \\\\
+    \\vspace{0.3cm}
+    \\rule{\\textwidth}{1pt} \\normalsize
+    \\textbf{Dílo:} ${esc(d.title)} \\quad $\\bullet$ \\quad \\textbf{Autor:} ${esc(d.author)}
 \\end{center}
 \\bigskip
 
-% --- 1. DRUH A ZANR ---
-\\subsection*{1. LITERÁRNÍ DRUH A ŽÁNR}
-${generateTableSection('Základní zařazení', [['Literární druh', esc(data.literarni_druh)], ['Literární žánr', esc(data.literarni_zanr)]])}
+% I. TEXT A JEHO SLOŽKY
+\\section*{I. TEXT A JEHO SLOŽKY -- ČEHO SI V TEXTU VŠÍMAT}
 
-% --- 2. KONTEXT ---
-\\subsection*{2. KONTEXT}
-${generateTableSection('Kontext díla', [['Autor, recepce, směr', esc(data.kontext_autora)]])}
+\\subsection*{1. Základní údaje}
+\\begin{description}
+    \\item[Literární druh a žánr:] ${esc(d.genre_type)}
+    \\item[Kontext:] ${esc(d.context)}
+\\end{description}
 
-% --- 3. OBSAH ---
-\\subsection*{3. OBSAH}
-\\subsubsection*{A. Téma}
-${generateTableSection('Téma', [['Hlavní a vedlejší téma', esc(data.hlavni_tema)]])}
+\\subsection*{2. Obsah}
+\\textbf{Téma:} ${esc(d.theme)} \\\\
 
-\\subsubsection*{B. Věcný obsah}
-${generateTableSection('Věcný obsah', [
-    ['Postavy', esc(data.hlavni_postavy)],
-    ['Vypravěč / Lyr. subjekt', esc(data.vypravec)],
-    ['Časoprostor', esc(data.casoprostor)],
-    ['Děj/Dění', esc(data.dej)],
-    ['Myšlenkový a emoční obsah', esc(data.myslenkovy_obsah)]
+${genTable('Věcný obsah', [
+    ['Postavy', esc(d.characters)],
+    ['Vypravěč / Lyrický subjekt', esc(d.narrator)],
+    ['Časoprostor', esc(d.setting)],
+    ['Děj/dění', esc(d.plot)],
+    ['Myšlenkový a emoční obsah', esc(d.thought_content)]
 ])}
 
-% --- 4. FORMA ---
-\\subsection*{4. FORMA}
-\\subsubsection*{A. Kompozice}
-${generateTableSection('Kompozice', [
-    ['Členění textu', esc(data.clneni_textu)],
-    ['Slohové postupy', esc(data.slohove_postupy)],
-    ['Kompoziční postupy', esc(data.kompozicni_postupy)],
-    ['Kompoziční principy', esc(data.kompozicni_principy)]
+\\subsection*{3. Forma}
+
+${genTable('Kompozice', [
+    ['Členění textu', esc(d.composition_structure)],
+    ['Slohové postupy', esc(d.style_procedures)],
+    ['Kompoziční postupy', esc(d.composition_procedures)],
+    ['Kompoziční principy', esc(d.composition_principles)]
 ])}
 
-\\subsubsection*{B. Výrazové prostředky}
-${generateTableSection('Výrazové prostředky', [
-    ['Neverbální', esc(data.neverbalni)],
-    ['Verbální (jazyk)', esc(data.verbalni)],
-    ['Figury a Tropy', esc(data.figury_tropy)]
+${genTable('Výrazové prostředky', [
+    ['Neverbální', esc(d.nonverbal)],
+    ['Verbální', esc(d.verbal)]
 ])}
 
-% --- 5. KOMENTÁŘ ---
-\\subsection*{5. KOMENTÁŘ (Jak o textu přemýšlet)}
-${generateTableSection('Komentář', [
-    ['Analýza (rozklad)', esc(data.analyza)],
-    ['Výklad (smysl/význam)', esc(data.vyklad)],
-    ['Hodnocení', esc(data.hodnoceni)]
-])}
+% II. KOMENTÁŘ
+\\section*{II. KOMENTÁŘ -- JAK O TEXTU PŘEMÝŠLET}
+
+\\subsection*{Analýza}
+${esc(d.analysis)}
+
+\\subsection*{Výklad}
+${esc(d.interpretation)}
+
+\\subsection*{Hodnocení}
+${esc(d.evaluation)}
+
 \\vspace{1cm}
-\\rule{\\textwidth}{0.2pt} 
-`;
-        }
+\\rule{\\textwidth}{0.2pt}
+`).join('');
 
-        window.generateFinalLatex = () => {
-            if (storedAnalyses.length === 0) { alertMessage('Žádné rozbory k uložení.'); return; }
-            const sorted = [...storedAnalyses].sort((a, b) => a.title.localeCompare(b.title));
-            const content = sorted.map(generateAnalysisBlock).join('');
-            
-            const latex = `\\documentclass[11pt, a4paper]{article}
+    const template = `\\documentclass[11pt, a4paper]{article}
 \\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \\usepackage{fontspec}
 \\usepackage[czech, bidi=basic, provide=*]{babel}
 \\babelprovide[import, onchar=ids fonts]{czech}
 \\babelfont{rm}{Noto Sans}
-\\usepackage{parskip, booktabs, fancyhdr, hyperref}
-\\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan, pdftitle={Maturitní Sborník}}
+\\usepackage{parskip, booktabs, fancyhdr, hyperref, enumitem}
+\\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=cyan, pdftitle={Maturitní Sborník}}
 \\pagestyle{fancy} \\fancyhead[L]{\\nouppercase{\\rightmark}} \\fancyhead[R]{\\thepage} \\fancyfoot{}
-\\setlength{\\headheight}{13.6pt}
 
 \\begin{document}
 \\begin{titlepage} \\centering \\vspace*{3cm}
 {\\Huge \\bfseries MATURITNÍ SOUBOR DĚL} \\\\[1.5cm]
-{\\huge \\bfseries Dle struktury: Text a jeho složky / Komentář} \\\\[3cm]
-{\\large Vypracoval: ...}
+{\\large Vygenerováno aplikací Rozbor Manager}
 \\end{titlepage}
 \\clearpage \\tableofcontents \\clearpage
-
-\\section*{Seznam Děl}
-\\begin{enumerate}
-${sorted.map(a => `\\item \\textbf{${esc(a.title)}} (${esc(a.author)})`).join('\n')}
-\\end{enumerate}
-\\clearpage
-
 ${content}
 \\end{document}`;
-            
-            document.getElementById('result-text').value = latex.trim();
-            document.getElementById('result-modal').style.display = 'flex';
-        }
 
-        // --- INIT ---
-        document.getElementById('analysis-form').addEventListener('submit', saveAnalysis);
-        document.addEventListener('DOMContentLoaded', loadAnalyses);
-        
-        function copyResultText() {
-            document.getElementById('result-text').select();
-            document.execCommand('copy');
-            alertMessage("Zkopírováno!");
-        }
+    document.getElementById('output-code').value = template;
+    document.getElementById('modal').classList.remove('hidden');
+    document.getElementById('modal').classList.add('flex');
+};
 
-        function alertMessage(msg) {
-            const div = document.createElement('div');
-            div.className = 'fixed right-8 top-8 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 shadow-lg z-50';
-            div.textContent = msg;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 3000);
-        }
-        
-        window.closeModal = () => document.getElementById('result-modal').style.display = 'none';
-        window.onclick = (e) => { if(e.target == document.getElementById('result-modal')) closeModal(); }
-    </script>
+const showToast = (msg) => {
+    const t = document.createElement('div');
+    t.className = 'fixed bottom-4 right-4 bg-slate-800 text-white px-4 py-2 rounded shadow-lg z-50 text-sm animate-bounce';
+    t.innerText = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
+};
+
+document.getElementById('btn-generate').onclick = generateLatex;
+document.getElementById('btn-close-modal').onclick = () => {
+    document.getElementById('modal').classList.add('hidden');
+    document.getElementById('modal').classList.remove('flex');
+};
+document.getElementById('btn-copy').onclick = async () => {
+    const txt = document.getElementById('output-code');
+    txt.select();
+    try {
+        await navigator.clipboard.writeText(txt.value);
+        showToast('Zkopírováno!');
+    } catch (err) {
+        document.execCommand('copy');
+        showToast('Zkopírováno (fallback)');
+    }
+};
+
+renderList();
+</script>
 </body>
 </html>
