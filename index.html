@@ -20,6 +20,14 @@
         .list-item {
             border-left: 4px solid transparent;
         }
+        
+        /* Disabled button styles */
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
@@ -28,7 +36,7 @@
         <header class="flex justify-between items-center mb-8 border-b border-slate-200 pb-4">
             <div>
                 <h1 class="text-3xl font-bold text-slate-900 tracking-tight">📚 Správce literárních rozborů</h1>
-                <p class="text-sm text-slate-500 mt-1">Tvůj ultimátní pomocníček s Rozbory</p>
+                <p class="text-sm text-slate-500 mt-1">Tvůj profesionální pomocníček s rozbory</p>
             </div>
             <div class="text-right">
                  <a href="https://github.com/SimonPoky/Literarni-rozbory" target="_blank" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-2">
@@ -238,7 +246,7 @@
         </div>
     </div>
 
-    <!-- LATEX MODAL -->
+    <!-- LATEX MODAL (THE GATEKEEPER EDITION) -->
     <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
         <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-4xl flex flex-col max-h-[90vh] overflow-hidden">
             
@@ -249,12 +257,23 @@
                 <button id="btn-close-modal" class="text-slate-400 hover:text-red-500 text-2xl leading-none transition-colors">&times;</button>
             </div>
 
-            <div class="bg-amber-50 px-4 py-3 border-b border-amber-100 flex items-start gap-3">
-                <span class="text-amber-600 text-lg shrink-0">⚠️</span>
-                <div class="text-xs text-amber-900 leading-relaxed">
-                    <strong>DŮLEŽITÉ PRO OVERLEAF:</strong><br>
-                    V Overleafu musíte ručně změnit kompilátor na <strong>XeLaTeX</strong>, jinak čeština a fonty nebudou fungovat.<br>
-                    <em>(Menu (vlevo nahoře) &rarr; Compiler &rarr; XeLaTeX)</em>
+            <!-- WARNING BAR -->
+            <div class="bg-red-50 border-l-8 border-red-600 p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <span class="text-red-600 text-2xl animate-pulse">⚠️</span>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-bold text-red-900 uppercase tracking-wide">
+                            Fatální chyba nastavení Overleafu
+                        </p>
+                        <p class="text-sm text-red-800 mt-1">
+                            Tento kód <strong>NEBUDE FUNGOVAT</strong>, pokud ručně nezměníte kompilátor na <span class="bg-red-200 px-1 rounded font-black">XeLaTeX</span>. Výchozí pdfLaTeX neumí české fonty.
+                        </p>
+                        <p class="text-xs text-red-600 mt-2">
+                            Menu (vlevo nahoře) &rarr; Compiler &rarr; XeLaTeX
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -262,14 +281,26 @@
                 <textarea id="output-code" class="w-full h-full p-4 font-mono text-xs bg-slate-50 resize-none focus:outline-none text-slate-700" readonly></textarea>
             </div>
 
-            <div class="p-4 border-t bg-white flex flex-col sm:flex-row justify-end gap-3 z-10">
-                <button id="btn-copy" class="px-4 py-2.5 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium shadow-sm">
-                    📋 Pouze zkopírovat
-                </button>
-                <button id="btn-overleaf" class="px-4 py-2.5 bg-green-700 hover:bg-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-bold flex items-center justify-center gap-2 group">
-                    <span>Zkopírovat & Otevřít Overleaf</span>
-                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                </button>
+            <!-- GATEKEEPER FOOTER -->
+            <div class="p-4 border-t bg-white z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                
+                <!-- FIXED: The Gate Checkbox Container is now a LABEL for native clicking -->
+                <label class="mb-4 flex items-center justify-end gap-2 bg-red-50 p-3 rounded border border-red-100 hover:bg-red-100 transition-colors cursor-pointer select-none">
+                    <input type="checkbox" id="acknowledge-check" class="w-5 h-5 text-red-600 rounded border-gray-300 focus:ring-red-500 cursor-pointer">
+                    <span class="ml-2 block text-sm font-bold text-red-900">
+                        Rozumím, že musím v Overleafu přepnout na XeLaTeX, jinak to bouchne.
+                    </span>
+                </label>
+
+                <div class="flex flex-col sm:flex-row justify-end gap-3">
+                    <button id="btn-copy" disabled class="px-4 py-2.5 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-all text-sm font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        📋 Pouze zkopírovat
+                    </button>
+                    <button id="btn-overleaf" disabled class="px-4 py-2.5 bg-green-700 hover:bg-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-bold flex items-center justify-center gap-2 group disabled:bg-slate-400 disabled:shadow-none disabled:cursor-not-allowed">
+                        <span>Zkopírovat & Otevřít Overleaf</span>
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </button>
+                </div>
             </div>
 
         </div>
@@ -619,7 +650,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const esc = (text) => {
         if (!text) return '-';
-        return text.replace(/[\\&%\$#_{}~^\n]/g, char => latexMap[char]);
+        // 1. Odstranění Emojis a divných znaků (povolí jen běžné znaky, čísla, interpunkci, českou diakritiku a základní cizí)
+        const sanitized = text.replace(/[^\w\s\d\.,;:!\?\(\)\-\–\—„“"'/\\&%\$#_{}~^áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽäöüßÄÖÜĺľščťžýáíéóúňďĽŠČŤŽÝÁÍÉÓÚŇĎ]/g, '');
+        
+        // 2. Escape pro LaTeX
+        return sanitized.replace(/[\\&%\$#_{}~^\n]/g, char => latexMap[char]);
     };
 
     const genRow = (label, value) => {
@@ -727,10 +762,39 @@ ${content}
         
         const modal = document.getElementById('modal');
         if (modal) {
+            // GATEKEEPER LOGIC: Check persistence
+            const hasAck = localStorage.getItem('latex_ack') === 'true';
+            const checkbox = document.getElementById('acknowledge-check');
+            if(checkbox) checkbox.checked = hasAck;
+            toggleButtons(hasAck);
+            
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
     };
+    
+    // GATEKEEPER LOGIC
+    const toggleButtons = (enabled) => {
+        const btnCopy = document.getElementById('btn-copy');
+        const btnOverleaf = document.getElementById('btn-overleaf');
+        
+        if(btnCopy) btnCopy.disabled = !enabled;
+        if(btnOverleaf) btnOverleaf.disabled = !enabled;
+    };
+    
+    const ackCheckbox = document.getElementById('acknowledge-check');
+    if(ackCheckbox) {
+        ackCheckbox.onchange = (e) => {
+            const checked = e.target.checked;
+            toggleButtons(checked);
+            // Save preference if checked (Permanent Contract)
+            if (checked) {
+                localStorage.setItem('latex_ack', 'true');
+            } else {
+                localStorage.setItem('latex_ack', 'false');
+            }
+        };
+    }
     
     const btnGenerate = document.getElementById('btn-generate');
     if (btnGenerate) btnGenerate.onclick = generateLatex;
@@ -794,4 +858,3 @@ ${content}
 </script>
 </body>
 </html>
-
