@@ -1,40 +1,48 @@
-# Literarni-rozbory
+# Literární rozbory
 
-Status: Stable Release v2.0
-Stack: HTML5, TailwindCSS, Vanilla JS, LaTeX
+**Verze: 2.0 (Edice Maturita 2025)**
 
-Komplexní nástroj navržený pro efektivní správu, archivaci a typografické zpracování maturitních rozborů z českého jazyka. Zapomeňte na Word nebo ztracené sešity. Tento systém transformuje vaše poznámky do profesionálního sborníku připraveného pro tisk.
+Tohle je nástroj, který ti zachrání krk u maturity. Žádný Word, který se rozhodí, když vložíš obrázek. Tohle ti vyrobí profesionální sborník rozborů, se kterým budeš u komise vypadat, že víš, co děláš (i když nevíš).
 
-# User Guide
+## ⚠️ ZLATÉ PRAVIDLO (Čti, nebo plač)
 
-Aplikace běží plně ve vašem prohlížeči. Nemusíte nic instalovat.
+**Do textu NEPIŠ žádné smajlíky (emoji) ani divné znaky!**
+Ten systém, co vyrábí PDF, je stará škola a nenávidí ❤️, 😂, 💀 a podobné věci. Pokud je tam dáš, **celé se to rozbije** a PDF se nevygeneruje.
+* ✅ Čeština, cizí jazyky, uvozovky, závorky.
+* ❌ Smajlíky, srdíčka, obrázkové znaky.
 
-Krok 1: Přístup
-Otevřete aplikaci zde: [https://simonpoky.github.io/Literarni-rozbory/]
+## Jak to použít
 
-Krok 2: Vyplnění dat
+Všechno běží přímo v prohlížeči. Nic neinstaluješ.
 
-Vyplňte formulář pro každou knihu.
+### Krok 1: Otevři to
+Jdi na: [[https://simonpoky.github.io/Literarni-rozbory/](https://simonpoky.github.io/Literarni-rozbory/)]
 
-Data se ukládají automaticky při kliknutí na "Uložit".
+### Krok 2: Piš
+Vyplň formulář pro každou knihu.
+* Klikni na **Uložit** a je to v bezpečí (v tvém prohlížeči).
+* Můžeš to zavřít a vrátit se zítra, data tam zůstanou.
+* Pro jistotu si občas stáhni zálohu (tlačítko **Export**), kdyby ti třeba shořel počítač.
 
-Nebojte se zavřít okno. Data zůstanou v prohlížeči (pokud si nevymažete cache).
+### Krok 3: Výroba PDF (Finále)
+Až budeš mít všechno napsané:
+1.  Klikni na zelené tlačítko **"Generovat LaTeX"**.
+2.  Zkopíruj ten kód, co na tebe vyskočí.
+3.  Jdi na stránku [Overleaf.com](https://www.overleaf.com) (je to zdarma, zaregistruj se).
+4.  Založ "New Project" -> "Blank Project".
+5.  Vlož tam ten kód místo toho, co tam je.
 
-Krok 3: Generování PDF (Crucial Phase)
+### 🚨 Krok 4: To nejdůležitější v Overleafu
+Aby fungovala čeština, musíš v Overleafu přepnout jednu věc:
+1.  Vlevo nahoře klikni na **Menu**.
+2.  V řádku **Compiler** vyber možnost **XeLaTeX**.
+3.  Klikni na zelené **Recompile**.
 
-Klikněte na zelené tlačítko "Generovat LaTeX Sborník".
+Pokud jsi to udělal správně, vypadne ti krásné PDF. Pokud ne, vrať se k bodu "Zlaté pravidlo".
 
-Zkopírujte vygenerovaný kód.
+---
 
-Otevřete Overleaf (https://www.overleaf.com).
+**Zřeknutí se odpovědnosti:**
+Autor nenese odpovědnost za to, pokud se u maturity rozpláčete, protože jste si nepřečetli Kytici. Ale s tímto formátováním u toho alespoň budete vypadat stylově.
 
-Vytvořte nový projekt a vložte kód.
-
-DULEŽITÉ: V Overleafu klikněte na "Menu" (vlevo nahoře) a změňte "Compiler" na "XeLaTeX".
-(Pokud to neuděláte, čeština se rozbije a vy budete smutní.)
-
-DISCLAIMER
-
-Tento nástroj je poskytován "tak jak je". Autor nenese odpovědnost za to, pokud se u maturity rozpláčete, protože jste si nepřečetli Kytici. Ale s tímto formátováním u toho alespoň budete vypadat profesionálně.
-
-Created & maintained by [skibidi šíma]
+*Made by SimonPoky*
