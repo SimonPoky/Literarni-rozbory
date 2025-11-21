@@ -28,7 +28,7 @@
         <header class="flex justify-between items-center mb-8 border-b border-slate-200 pb-4">
             <div>
                 <h1 class="text-3xl font-bold text-slate-900 tracking-tight">📚 Správce literárních rozborů</h1>
-                <p class="text-sm text-slate-500 mt-1">Pomocníček na rozbory</p>
+                <p class="text-sm text-slate-500 mt-1">Lokální úložiště v1.6 (Safe Import)</p>
             </div>
             <div class="text-right">
                  <a href="https://github.com/SimonPoky/Literarni-rozbory" target="_blank" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-2">
@@ -196,7 +196,7 @@
                     
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
                          <button type="button" id="btn-save-sidebar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
-                            💾 Uložit soubor
+                            💾 Rychlé uložení
                         </button>
                     </div>
 
@@ -205,16 +205,31 @@
                             <h3 class="font-semibold text-slate-800">Uloženo (<span id="count">0</span>)</h3>
                             <button id="btn-nuke" class="text-xs text-red-500 hover:text-red-700 font-medium">Smazat vše</button>
                         </div>
-                        <div id="list-container" class="max-h-[60vh] overflow-y-auto divide-y divide-slate-100">
+                        <div id="list-container" class="max-h-[40vh] overflow-y-auto divide-y divide-slate-100">
                             <!-- Items inserted by JS -->
                         </div>
                     </div>
 
+                    <!-- BACKUP Section -->
                     <div class="bg-slate-50 rounded-xl border border-slate-200 p-6">
-                        <h3 class="font-bold text-lg mb-2 text-slate-700">Export</h3>
-                        <p class="text-slate-500 text-sm mb-4">Vygenerovat kompletní sborník</p>
+                        <h3 class="font-bold text-lg mb-2 text-slate-700">Data & Záloha</h3>
+                        <p class="text-slate-500 text-sm mb-4">Prevence proti ztrátě dat. Stáhni si JSON a měj klid.</p>
+                        <div class="flex gap-2">
+                            <button id="btn-backup" class="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-3 rounded text-sm transition-colors">
+                                ⬇️ Export
+                            </button>
+                            <button onclick="document.getElementById('import-file').click()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2 px-3 rounded text-sm transition-colors">
+                                ⬆️ Import
+                            </button>
+                            <input type="file" id="import-file" class="hidden" accept=".json">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl border border-slate-200 p-6">
+                        <h3 class="font-bold text-lg mb-2 text-slate-700">Export PDF</h3>
+                        <p class="text-slate-500 text-sm mb-4">Vygeneruje kompletní sborník pro XeLaTeX přesně dle školní struktury.</p>
                         <button id="btn-generate" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow transition-colors flex items-center justify-center gap-2">
-                            <span>⚡ Generovat LaTeX ⚡</span>
+                            <span>⚡ Generovat LaTeX</span>
                         </button>
                     </div>
 
@@ -223,17 +238,70 @@
         </div>
     </div>
 
-    <!-- MODAL -->
+    <!-- LATEX MODAL -->
     <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-4xl flex flex-col max-h-[90vh]">
-            <div class="p-4 border-b flex justify-between items-center">
-                <h3 class="font-bold text-lg">LaTeX Výstup</h3>
-                <button id="btn-close-modal" class="text-slate-400 hover:text-red-500 text-2xl leading-none">&times;</button>
+        <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-4xl flex flex-col max-h-[90vh] overflow-hidden">
+            
+            <div class="p-4 border-b flex justify-between items-center bg-white z-10">
+                <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                    📄 LaTeX Výstup
+                </h3>
+                <button id="btn-close-modal" class="text-slate-400 hover:text-red-500 text-2xl leading-none transition-colors">&times;</button>
             </div>
-            <div class="flex-1 p-0 relative">
-                <textarea id="output-code" class="w-full h-full min-h-[400px] p-4 font-mono text-xs bg-slate-50 resize-none focus:outline-none" readonly></textarea>
-                <button id="btn-copy" class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded shadow">
-                    Copy
+
+            <div class="bg-amber-50 px-4 py-3 border-b border-amber-100 flex items-start gap-3">
+                <span class="text-amber-600 text-lg shrink-0">⚠️</span>
+                <div class="text-xs text-amber-900 leading-relaxed">
+                    <strong>DŮLEŽITÉ PRO OVERLEAF:</strong><br>
+                    V Overleafu musíte ručně změnit kompilátor na <strong>XeLaTeX</strong>, jinak čeština a fonty nebudou fungovat.<br>
+                    <em>(Menu (vlevo nahoře) &rarr; Compiler &rarr; XeLaTeX)</em>
+                </div>
+            </div>
+
+            <div class="flex-1 p-0 relative min-h-0">
+                <textarea id="output-code" class="w-full h-full p-4 font-mono text-xs bg-slate-50 resize-none focus:outline-none text-slate-700" readonly></textarea>
+            </div>
+
+            <div class="p-4 border-t bg-white flex flex-col sm:flex-row justify-end gap-3 z-10">
+                <button id="btn-copy" class="px-4 py-2.5 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium shadow-sm">
+                    📋 Pouze zkopírovat
+                </button>
+                <button id="btn-overleaf" class="px-4 py-2.5 bg-green-700 hover:bg-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-bold flex items-center justify-center gap-2 group">
+                    <span>Zkopírovat & Otevřít Overleaf</span>
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- IMPORT MODAL (Safe Logic) -->
+    <div id="import-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl w-96 max-w-full overflow-hidden transform transition-all scale-100">
+            <div class="p-6 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+                    <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="import-title">Nalezeno dat: <span id="import-count">0</span></h3>
+                <div class="mt-2">
+                    <p class="text-sm text-gray-500">
+                        Jak chceš s novými daty naložit?
+                    </p>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-col sm:gap-3">
+                <button id="btn-import-merge" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
+                    Sloučit (Bezpečné)
+                </button>
+                <p class="text-xs text-center text-gray-400">Zachová existující, přidá nové.</p>
+                
+                <button id="btn-import-overwrite" class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm sm:mt-0">
+                    Přepsat vše (Smazat staré)
+                </button>
+                <p class="text-xs text-center text-gray-400">Smaže aktuální data a nahradí je.</p>
+                
+                <button id="btn-import-cancel" class="mt-4 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:text-sm">
+                    Zrušit
                 </button>
             </div>
         </div>
@@ -246,6 +314,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('analysis-form');
     const listContainer = document.getElementById('list-container');
     let db = [];
+    
+    // Temp var for import logic
+    let importedDataTemp = null;
 
     // utils
     const uuid = () => {
@@ -304,8 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sorted.forEach((item) => {
             const wrapper = document.createElement('div');
-            // UX Fix: Add list-item class for transparent border logic
-            // UX Fix: Add data-uid for selection logic
             wrapper.className = 'list-item p-3 hover:bg-blue-50 transition-colors group flex justify-between items-center border-b border-slate-50 last:border-0';
             wrapper.dataset.uid = item.uid;
 
@@ -352,24 +421,26 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentId) {
                 const idx = db.findIndex(item => item.uid === currentId);
                 if (idx > -1) {
+                    // Update existing
                     db[idx] = { ...entry, uid: currentId };
+                    showToast('Aktualizováno');
                 } else {
+                    // ID exists in form but not in DB -> Treat as new
                     entry.uid = uuid();
                     db.push(entry);
+                    document.getElementById('entry-id').value = entry.uid;
+                    showToast('Uloženo jako nový');
                 }
             } else {
+                // New entry
                 entry.uid = uuid();
                 db.push(entry);
+                document.getElementById('entry-id').value = entry.uid;
+                showToast('Uloženo');
             }
             
             saveToDb();
-            // Keep the form filled and just update the list to reflect changes
-            renderList(entry.uid); // Keep highlighting the current item
-            if (!currentId) {
-                 // If it was new, we need to set the ID so subsequent saves update it
-                 document.getElementById('entry-id').value = entry.uid;
-            }
-            showToast(currentId ? 'Aktualizováno' : 'Uloženo');
+            renderList(document.getElementById('entry-id').value);
         });
     }
 
@@ -395,16 +466,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (entryIdInput) entryIdInput.value = uid;
         }
         
-        // UX Fix: visually update list
         renderList(uid);
-        
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.deleteEntry = (uid) => {
         if (confirm('Opravdu smazat tento rozbor?')) {
             db = db.filter(item => item.uid !== uid); 
-            saveToDb(); // this calls renderList() without arg, clearing selection
+            saveToDb(); 
             
             const entryIdInput = document.getElementById('entry-id');
             if (entryIdInput && entryIdInput.value === uid) {
@@ -417,8 +486,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (form) form.reset();
         const entryIdInput = document.getElementById('entry-id');
         if (entryIdInput) entryIdInput.value = '';
-        // UX Fix: Clear selection in sidebar
         renderList(null);
+        showToast('Formulář vyčištěn');
     };
 
     const btnReset = document.getElementById('btn-reset');
@@ -435,9 +504,105 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // latex generator
+    // --- SAFE IMPORT LOGIC (v1.6) ---
     
-    // Map for O(1) lookups
+    const importModal = document.getElementById('import-modal');
+    const btnImportMerge = document.getElementById('btn-import-merge');
+    const btnImportOverwrite = document.getElementById('btn-import-overwrite');
+    const btnImportCancel = document.getElementById('btn-import-cancel');
+
+    const closeImportModal = () => {
+        importModal.classList.add('hidden');
+        importModal.classList.remove('flex');
+        importedDataTemp = null;
+        // Clear input so it can trigger again
+        const fileInput = document.getElementById('import-file');
+        if (fileInput) fileInput.value = '';
+    };
+
+    if (btnImportCancel) btnImportCancel.onclick = closeImportModal;
+
+    if (btnImportMerge) {
+        btnImportMerge.onclick = () => {
+            if (!importedDataTemp) return;
+            let added = 0;
+            importedDataTemp.forEach(newItem => {
+                if (!db.find(existing => existing.uid === newItem.uid)) {
+                    db.push(newItem);
+                    added++;
+                }
+            });
+            saveToDb();
+            renderList();
+            showToast(`Sloučeno. Přidáno ${added} nových.`);
+            closeImportModal();
+        };
+    }
+
+    if (btnImportOverwrite) {
+        btnImportOverwrite.onclick = () => {
+            if (!importedDataTemp) return;
+            db = importedDataTemp;
+            saveToDb();
+            renderList();
+            showToast('Databáze kompletně přepsána.');
+            closeImportModal();
+        };
+    }
+
+    const btnBackup = document.getElementById('btn-backup');
+    if (btnBackup) {
+        btnBackup.onclick = () => {
+            if (!db || !db.length) return showToast('Žádná data k záloze.');
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "rozbory_backup_" + new Date().toISOString().slice(0,10) + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showToast('Záloha stažena');
+        };
+    }
+
+    const importFile = document.getElementById('import-file');
+    if (importFile) {
+        importFile.onchange = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                         if (imported.length > 0 && !imported[0].title) throw new Error("Invalid structure");
+                        
+                        // Set temp data
+                        importedDataTemp = imported;
+                        
+                        // Update modal UI
+                        document.getElementById('import-count').textContent = imported.length;
+                        
+                        // Open Modal instead of native confirm
+                        importModal.classList.remove('hidden');
+                        importModal.classList.add('flex');
+                        
+                    } else {
+                        alert('Soubor neobsahuje validní seznam rozborů.');
+                        event.target.value = '';
+                    }
+                } catch (ex) {
+                    alert('Chyba při čtení souboru. Je to validní JSON záloha?');
+                    console.error(ex);
+                    event.target.value = '';
+                }
+            };
+            reader.readAsText(file);
+        };
+    }
+
+    // latex generator
     const latexMap = {
         '\\': '\\textbackslash{}',
         '&': '\\&',
@@ -449,17 +614,16 @@ document.addEventListener('DOMContentLoaded', () => {
         '}': '\\}',
         '~': '\\textasciitilde{}',
         '^': '\\textasciicircum{}',
-        '\n': '\\newline ' // FIX 1: Tablebreaker fix. Use \newline inside parbox/p columns.
+        '\n': '\\newline '
     };
 
     const esc = (text) => {
         if (!text) return '-';
-        // Single pass replacement to avoid recursive escaping issues
         return text.replace(/[\\&%\$#_{}~^\n]/g, char => latexMap[char]);
     };
 
     const genRow = (label, value) => {
-        return `\\textbf{${label}:} & \\parbox[t]{10.5cm}{${esc(value)}} \\\\ \n\\midrule\n`;
+        return `\\textbf{${label}:} & \\parbox[t]{10.0cm}{${esc(value)}} \\\\ \n\\midrule\n`;
     };
 
     const generateLatex = () => {
@@ -480,7 +644,7 @@ document.addEventListener('DOMContentLoaded', () => {
 \\section*{TEXT A JEHO SLOŽKY – ČEHO SI V TEXTU VŠÍMAT}
 
 \\subsection*{Základní údaje}
-\\begin{tabular}{p{5.5cm} p{10.5cm}}
+\\begin{tabular}{p{5.5cm} p{10.0cm}}
 \\toprule
 ${genRow('Literární druh a žánr', d.kind_genre)}
 ${genRow('Kontext', d.context)}
@@ -488,7 +652,7 @@ ${genRow('Kontext', d.context)}
 \\end{tabular}
 
 \\subsection*{Obsah}
-\\begin{tabular}{p{5.5cm} p{10.5cm}}
+\\begin{tabular}{p{5.5cm} p{10.0cm}}
 \\toprule
 ${genRow('Téma', d.theme)}
 \\multicolumn{2}{l}{\\textbf{Věcný obsah:}} \\\\ \\midrule
@@ -502,7 +666,7 @@ ${genRow('Myšlenkový a emoční obsah', d.thought_content)}
 
 \\subsection*{Forma}
 \\subsubsection*{Kompozice}
-\\begin{tabular}{p{5.5cm} p{10.5cm}}
+\\begin{tabular}{p{5.5cm} p{10.0cm}}
 \\toprule
 ${genRow('Členění textu', d.composition_structure)}
 ${genRow('Slohové postupy', d.style_procedures)}
@@ -512,7 +676,7 @@ ${genRow('Kompoziční principy', d.composition_principles)}
 \\end{tabular}
 
 \\subsubsection*{Výrazové prostředky}
-\\begin{tabular}{p{5.5cm} p{10.5cm}}
+\\begin{tabular}{p{5.5cm} p{10.0cm}}
 \\toprule
 ${genRow('Neverbální', d.nonverbal)}
 ${genRow('Verbální', d.verbal)}
@@ -535,8 +699,6 @@ ${esc(d.evaluation)}
 \\rule{\\textwidth}{0.5pt}
 `).join('');
 
-        // FIX 2: Font Trap fix. Removed hardcoded 'Noto Sans'.
-        // Uses default sans-serif (usually Latin Modern Sans) which is present on all TeX systems.
         const template = `\\documentclass[11pt, a4paper]{article}
 \\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \\usepackage{fontspec}
@@ -544,8 +706,6 @@ ${esc(d.evaluation)}
 \\babelprovide[import, onchar=ids fonts]{czech}
 
 % UNIVERSAL FONT FIX:
-% Use default sans-serif font available in the system (usually Latin Modern Sans)
-% This avoids "Font Noto Sans not found" errors on school computers.
 \\renewcommand{\\familydefault}{\\sfdefault}
 
 \\usepackage{parskip, booktabs, fancyhdr, hyperref}
@@ -584,19 +744,35 @@ ${content}
         setTimeout(() => t.remove(), 2000);
     };
 
+    const copyToClipboard = async () => {
+        const txt = document.getElementById('output-code');
+        if (!txt) return;
+        txt.select();
+        try {
+            await navigator.clipboard.writeText(txt.value);
+            return true;
+        } catch (err) {
+            document.execCommand('copy');
+            return true; 
+        }
+    };
+
     const btnCopy = document.getElementById('btn-copy');
     if (btnCopy) {
         btnCopy.onclick = async () => {
-            const txt = document.getElementById('output-code');
-            if (!txt) return;
-            txt.select();
-            try {
-                await navigator.clipboard.writeText(txt.value);
-                showToast('Zkopírováno!');
-            } catch (err) {
-                document.execCommand('copy');
-                showToast('Zkopírováno (fallback)');
-            }
+            await copyToClipboard();
+            showToast('Zkopírováno!');
+        };
+    }
+
+    const btnOverleaf = document.getElementById('btn-overleaf');
+    if (btnOverleaf) {
+        btnOverleaf.onclick = async () => {
+            await copyToClipboard();
+            showToast('Zkopírováno! Otevírám Overleaf...');
+            setTimeout(() => {
+                window.open('https://www.overleaf.com/project', '_blank');
+            }, 800);
         };
     }
 
@@ -617,5 +793,4 @@ ${content}
 });
 </script>
 </body>
-
 </html>
