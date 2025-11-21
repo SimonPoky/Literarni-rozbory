@@ -5,7 +5,7 @@
 Všechno běží v prohlížeči. Žádné instalace, žádné výmluvy. Čistá síla.
 
 ### Krok 1: Iniciace
-Neklikej sem, pokud na to nemáš:
+Tady to celé jede:
 👉 [[https://simonpoky.github.io/Literarni-rozbory/](https://simonpoky.github.io/Literarni-rozbory/)]
 
 ### Krok 2: Vyplnění
@@ -45,4 +45,4 @@ Náš systém je stará škola. Je to tvrdý, precizní stroj, který nenávidí
 Autor tohoto nástroje nenese absolutně žádnou odpovědnost za vaše selhání, selhání programu, nervová zhroucení nebo neschopnost přečíst povinnou četbu. Tento nástroj vám dodává formu, obsah je na vaší vlastní (ne)schopnosti. Pokud u maturity vyhoříte, je to váš problém. Ale s tímhle formátováním budete u toho selhání alespoň vypadat jako ředitelé zeměkoule.
 
 **Podpis:**
-skibidy Šíma*
+*skibidy Šíma*
