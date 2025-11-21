@@ -13,12 +13,10 @@
         textarea::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
         textarea::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
         
-        /* UX Fix: Visual indication for active item */
         .item-active { 
-            background-color: #eff6ff !important; /* blue-50 */
-            border-left: 4px solid #2563eb !important; /* blue-600 */
+            background-color: #eff6ff !important; 
+            border-left: 4px solid #2563eb !important; 
         }
-        /* UX Fix: Ensure inactive items have a transparent border to avoid layout jumps */
         .list-item {
             border-left: 4px solid transparent;
         }
@@ -30,7 +28,7 @@
         <header class="flex justify-between items-center mb-8 border-b border-slate-200 pb-4">
             <div>
                 <h1 class="text-3xl font-bold text-slate-900 tracking-tight">📚 Správce literárních rozborů</h1>
-                <p class="text-sm text-slate-500 mt-1">Lokální úložiště v1.2 (Patched)</p>
+                <p class="text-sm text-slate-500 mt-1">Pomocníček na rozbory</p>
             </div>
             <div class="text-right">
                  <a href="https://github.com/SimonPoky/Literarni-rozbory" target="_blank" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-2">
@@ -198,7 +196,7 @@
                     
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
                          <button type="button" id="btn-save-sidebar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
-                            💾 Rychlé uložení
+                            💾 Uložit soubor
                         </button>
                     </div>
 
@@ -214,9 +212,9 @@
 
                     <div class="bg-slate-50 rounded-xl border border-slate-200 p-6">
                         <h3 class="font-bold text-lg mb-2 text-slate-700">Export</h3>
-                        <p class="text-slate-500 text-sm mb-4">Vygeneruje kompletní sborník pro XeLaTeX přesně dle školní struktury.</p>
+                        <p class="text-slate-500 text-sm mb-4">Vygenerovat kompletní sborník</p>
                         <button id="btn-generate" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow transition-colors flex items-center justify-center gap-2">
-                            <span>⚡ Generovat LaTeX</span>
+                            <span>⚡ Generovat LaTeX ⚡</span>
                         </button>
                     </div>
 
@@ -619,4 +617,5 @@ ${content}
 });
 </script>
 </body>
+
 </html>
