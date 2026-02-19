@@ -534,7 +534,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (form) {
             Object.keys(data).forEach(key => {
                 const input = form.elements[key];
-                if (input) input.value = data[key];
+                if (input) {
+                    input.value = data[key];
+                    if (input.tagName === 'TEXTAREA') autoResize(input);
+                }
             });
 
             const entryIdInput = document.getElementById('entry-id');
@@ -559,6 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resetForm = () => {
         if (form) form.reset();
+        document.querySelectorAll('#analysis-form textarea').forEach(ta => autoResize(ta));
         const entryIdInput = document.getElementById('entry-id');
         if (entryIdInput) entryIdInput.value = '';
         renderList(null);
@@ -873,6 +877,7 @@ ${content}
 </script>
 </body>
 </html>
+
 
 
 
