@@ -369,6 +369,21 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // Auto-resize logic
+    const autoResize = (el) => {
+        el.style.height = 'auto';
+        el.style.height = el.scrollHeight + 'px';
+    };
+
+    // Apply to all form textareas
+    document.querySelectorAll('#analysis-form textarea').forEach(ta => {
+        ta.style.overflow = 'hidden';
+        ta.style.resize = 'none';
+        ta.addEventListener('input', () => autoResize(ta));
+        
+        // Init on load
+        setTimeout(() => autoResize(ta), 0); 
+    });
     // ========== DARK MODE TOGGLE ==========
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
@@ -858,6 +873,7 @@ ${content}
 </script>
 </body>
 </html>
+
 
 
 
