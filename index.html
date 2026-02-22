@@ -683,14 +683,16 @@ document.addEventListener('DOMContentLoaded', () => {
         '\n': '\\newline '
     };
 
-    const esc = (text) => {
+const esc = (text) => {
         if (!text) return '-';
-        const sanitized = text.replace(/[^\w\s\d\.,;:!\?\(\)\-\–\—„""'/\\&%\$#_{}~^áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽäöüßÄÖÜĺľščťžýáíéóúňďĽŠČŤŽÝÁÍÉÓÚŇĎ]/g, '');
+        // Trim to prevent trailing newlines from breaking tables
+        const sanitized = text.trim().replace(/[^\w\s\d\.,;:!\?\(\)\-\–\—„""'/\\&%\$#_{}~^áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽäöüßÄÖÜĺľščťžýáíéóúňďĽŠČŤŽÝÁÍÉÓÚŇĎ]/g, '');
         return sanitized.replace(/[\\&%\$#_{}~^\n]/g, char => latexMap[char]);
     };
 
     const genRow = (label, value) => {
-        return `\\textbf{${label}:} & \\parbox[t]{10.0cm}{${esc(value)}} \\\\ \n\\midrule\n`;
+        // Removed parbox for better spacing
+        return `\\textbf{${label}:} & ${esc(value)} \\\\ \n\\midrule\n`;
     };
 
     const generateLatex = () => {
@@ -711,15 +713,14 @@ document.addEventListener('DOMContentLoaded', () => {
 \\section*{TEXT A JEHO SLOŽKY – ČEHO SI V TEXTU VŠÍMAT}
 
 \\subsection*{Základní údaje}
-\\begin{tabular}{p{5.5cm} p{10.0cm}}
+\\begin{longtable}{p{4.5cm} p{11.0cm}}
 \\toprule
 ${genRow('Literární druh a žánr', d.kind_genre)}
 ${genRow('Kontext', d.context)}
-\\bottomrule
-\\end{tabular}
+\\end{longtable}
 
 \\subsection*{Obsah}
-\\begin{tabular}{p{5.5cm} p{10.0cm}}
+\\begin{longtable}{p{4.5cm} p{11.0cm}}
 \\toprule
 ${genRow('Téma', d.theme)}
 \\multicolumn{2}{l}{\\textbf{Věcný obsah:}} \\\\ \\midrule
@@ -728,27 +729,24 @@ ${genRow('Vypravěč / Lyrický subjekt', d.narrator)}
 ${genRow('Časoprostor', d.setting)}
 ${genRow('Děj/Dění', d.plot)}
 ${genRow('Myšlenkový a emoční obsah', d.thought_content)}
-\\bottomrule
-\\end{tabular}
+\\end{longtable}
 
 \\subsection*{Forma}
 \\subsubsection*{Kompozice}
-\\begin{tabular}{p{5.5cm} p{10.0cm}}
+\\begin{longtable}{p{4.5cm} p{11.0cm}}
 \\toprule
 ${genRow('Členění textu', d.composition_structure)}
 ${genRow('Slohové postupy', d.style_procedures)}
 ${genRow('Kompoziční postupy', d.composition_procedures)}
 ${genRow('Kompoziční principy', d.composition_principles)}
-\\bottomrule
-\\end{tabular}
+\\end{longtable}
 
 \\subsubsection*{Výrazové prostředky}
-\\begin{tabular}{p{5.5cm} p{10.0cm}}
+\\begin{longtable}{p{4.5cm} p{11.0cm}}
 \\toprule
 ${genRow('Neverbální', d.nonverbal)}
 ${genRow('Verbální', d.verbal)}
-\\bottomrule
-\\end{tabular}
+\\end{longtable}
 
 % PART II
 \\section*{KOMENTÁŘ – JAK O TEXTU PŘEMÝŠLET}
@@ -763,7 +761,7 @@ ${esc(d.evaluation)}
 \\rule{\\textwidth}{0.5pt}
 `).join('');
 
-        const template = `\\documentclass[11pt, a4paper]{article}
+        const template = \`\\documentclass[11pt, a4paper]{article}
 \\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \\usepackage{fontspec}
 \\usepackage[czech, bidi=basic, provide=*]{babel}
@@ -771,7 +769,8 @@ ${esc(d.evaluation)}
 
 \\renewcommand{\\familydefault}{\\sfdefault}
 
-\\usepackage{parskip, booktabs, fancyhdr, hyperref}
+% Added longtable to required packages
+\\usepackage{parskip, booktabs, fancyhdr, hyperref, longtable}
 \\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=cyan, pdftitle={Maturitní Sborník}}
 \\pagestyle{fancy} \\fancyhead[L]{\\nouppercase{\\rightmark}} \\fancyhead[R]{\\thepage} \\fancyfoot{}
 
@@ -782,8 +781,8 @@ ${esc(d.evaluation)}
 {\\large Vygenerováno aplikací Správce literárních rozborů}
 \\end{titlepage}
 \\clearpage \\tableofcontents \\clearpage
-${content}
-\\end{document}`;
+\${content}
+\\end{document}\`;
 
         const outputCode = document.getElementById('output-code');
         if (outputCode) outputCode.value = template;
@@ -877,6 +876,7 @@ ${content}
 </script>
 </body>
 </html>
+
 
 
 
