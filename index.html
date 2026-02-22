@@ -1,711 +1,709 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Správce literárních rozborů</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class' };
-        // Prevent FOUC – apply dark class before paint
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            }
-        })();
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Správce literárních rozborů</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        // Prevent FOUC – apply dark class before paint
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
 
-        /* Scrollbar – light */
-        textarea::-webkit-scrollbar, .max-h-\[40vh\]::-webkit-scrollbar { width: 8px; }
-        textarea::-webkit-scrollbar-track, .max-h-\[40vh\]::-webkit-scrollbar-track { background: #f1f1f1; }
-        textarea::-webkit-scrollbar-thumb, .max-h-\[40vh\]::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-        textarea::-webkit-scrollbar-thumb:hover, .max-h-\[40vh\]::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        /* Scrollbar – light */
+        textarea::-webkit-scrollbar, .max-h-\[40vh\]::-webkit-scrollbar { width: 8px; }
+        textarea::-webkit-scrollbar-track, .max-h-\[40vh\]::-webkit-scrollbar-track { background: #f1f1f1; }
+        textarea::-webkit-scrollbar-thumb, .max-h-\[40vh\]::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb:hover, .max-h-\[40vh\]::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
 
-        /* Scrollbar – dark */
-        .dark textarea::-webkit-scrollbar-track, .dark .max-h-\[40vh\]::-webkit-scrollbar-track { background: #1e293b; }
-        .dark textarea::-webkit-scrollbar-thumb, .dark .max-h-\[40vh\]::-webkit-scrollbar-thumb { background: #475569; }
-        .dark textarea::-webkit-scrollbar-thumb:hover, .dark .max-h-\[40vh\]::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        /* Scrollbar – dark */
+        .dark textarea::-webkit-scrollbar-track, .dark .max-h-\[40vh\]::-webkit-scrollbar-track { background: #1e293b; }
+        .dark textarea::-webkit-scrollbar-thumb, .dark .max-h-\[40vh\]::-webkit-scrollbar-thumb { background: #475569; }
+        .dark textarea::-webkit-scrollbar-thumb:hover, .dark .max-h-\[40vh\]::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-        /* Active sidebar item */
-        .item-active {
-            background-color: #eff6ff !important;
-            border-left: 4px solid #2563eb !important;
-        }
-        .dark .item-active {
-            background-color: #1e3a5f !important;
-            border-left: 4px solid #3b82f6 !important;
-        }
-        .list-item { border-left: 4px solid transparent; }
+        /* Active sidebar item */
+        .item-active {
+            background-color: #eff6ff !important;
+            border-left: 4px solid #2563eb !important;
+        }
+        .dark .item-active {
+            background-color: #1e3a5f !important;
+            border-left: 4px solid #3b82f6 !important;
+        }
+        .list-item { border-left: 4px solid transparent; }
 
-        /* Disabled */
-        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        /* Disabled */
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
-        /* Toggle switch */
-        .theme-toggle {
-            position: relative;
-            width: 56px; height: 28px;
-            background: #cbd5e1;
-            border-radius: 9999px;
-            cursor: pointer;
-            transition: background 0.3s;
-            border: none; outline: none;
-        }
-        .dark .theme-toggle { background: #475569; }
-        .theme-toggle::after {
-            content: '☀️';
-            position: absolute;
-            top: 2px; left: 2px;
-            width: 24px; height: 24px;
-            background: white;
-            border-radius: 9999px;
-            transition: transform 0.3s, background 0.3s;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .dark .theme-toggle::after {
-            content: '🌙';
-            transform: translateX(28px);
-            background: #1e293b;
-        }
-    </style>
+        /* Toggle switch */
+        .theme-toggle {
+            position: relative;
+            width: 56px; height: 28px;
+            background: #cbd5e1;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border: none; outline: none;
+        }
+        .dark .theme-toggle { background: #475569; }
+        .theme-toggle::after {
+            content: '☀️';
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 24px; height: 24px;
+            background: white;
+            border-radius: 9999px;
+            transition: transform 0.3s, background 0.3s;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .dark .theme-toggle::after {
+            content: '🌙';
+            transform: translateX(28px);
+            background: #1e293b;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <header class="flex flex-wrap justify-between items-center mb-8 border-b border-slate-200 dark:border-slate-700 pb-4 gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">📚 Správce literárních rozborů</h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Tvůj profesionální pomocníček s rozbory</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <!-- DARK MODE TOGGLE -->
-                <button id="theme-toggle" class="theme-toggle" title="Přepnout světlý/tmavý režim" aria-label="Přepnout tmavý režim"></button>
-                <a href="https://github.com/SimonPoky/Literarni-rozbory" target="_blank" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors flex items-center gap-2">
-                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                    SimonPoky/Literarni-rozbory
-                </a>
-            </div>
-        </header>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="flex flex-wrap justify-between items-center mb-8 border-b border-slate-200 dark:border-slate-700 pb-4 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">📚 Správce literárních rozborů</h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Tvůj profesionální pomocníček s rozbory</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <!-- DARK MODE TOGGLE -->
+                <button id="theme-toggle" class="theme-toggle" title="Přepnout světlý/tmavý režim" aria-label="Přepnout tmavý režim"></button>
+                <a href="https://github.com/SimonPoky/Literarni-rozbory" target="_blank" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors flex items-center gap-2">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    SimonPoky/Literarni-rozbory
+                </a>
+            </div>
+        </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <div class="lg:col-span-2 space-y-6">
-                <form id="analysis-form" class="space-y-8">
-    <input type="hidden" name="id" id="entry-id">
+            <div class="lg:col-span-2 space-y-6">
+                <form id="analysis-form" class="space-y-8">
+    <input type="hidden" name="id" id="entry-id">
 
-    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-        <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-4 border-b dark:border-slate-600 pb-2">Identifikace díla</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="col-span-2 md:col-span-1">
-                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Název díla</label>
-                <textarea name="title" required rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 resize-y"></textarea>
-            </div>
-            <div class="col-span-2 md:col-span-1">
-                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Autor</label>
-                <textarea name="author" required rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 resize-y"></textarea>
-            </div>
-        </div>
-    </div>
+    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-4 border-b dark:border-slate-600 pb-2">Identifikace díla</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="col-span-2 md:col-span-1">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Název díla</label>
+                <textarea name="title" required rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 resize-y"></textarea>
+            </div>
+            <div class="col-span-2 md:col-span-1">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Autor</label>
+                <textarea name="author" required rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 resize-y"></textarea>
+            </div>
+        </div>
+    </div>
 
-    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 border-b dark:border-slate-600 pb-2 uppercase tracking-wide">I. Text a jeho složky – Čeho si všímat</h2>
+    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 border-b dark:border-slate-600 pb-2 uppercase tracking-wide">I. Text a jeho složky – Čeho si všímat</h2>
 
-        <div class="mb-6">
-            <label class="block text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Literární druh a žánr</label>
-            <textarea name="kind_genre" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="lyrika, próza, balada, román, povídka apod."></textarea>
-        </div>
+        <div class="mb-6">
+            <label class="block text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Literární druh a žánr</label>
+            <textarea name="kind_genre" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="lyrika, próza, balada, román, povídka apod."></textarea>
+        </div>
 
-        <div class="mb-6">
-            <label class="block text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Kontext</label>
-            <textarea name="context" rows="5" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2" placeholder="autor, recepce díla, literární období, literární směr apod."></textarea>
-        </div>
+        <div class="mb-6">
+            <label class="block text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Kontext</label>
+            <textarea name="context" rows="5" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2" placeholder="autor, recepce díla, literární období, literární směr apod."></textarea>
+        </div>
 
-        <div class="mb-6 border-l-4 border-blue-100 dark:border-blue-800 pl-4 py-1">
-            <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200 mb-3">Obsah</h3>
+        <div class="mb-6 border-l-4 border-blue-100 dark:border-blue-800 pl-4 py-1">
+            <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200 mb-3">Obsah</h3>
 
-            <div class="mb-4">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Téma</label>
-                <textarea name="theme" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="hlavní, vedlejší apod."></textarea>
-            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Téma</label>
+                <textarea name="theme" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="hlavní, vedlejší apod."></textarea>
+            </div>
 
-            <div class="space-y-4">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide border-b border-slate-200 dark:border-slate-600 pb-1">Věcný obsah</h4>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Postavy</label>
-                    <textarea name="characters" rows="2" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2" placeholder="hlavní/vedlejší; popis, charakteristika, vývoj, vztahy..."></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Vypravěč / Lyrický subjekt</label>
-                    <textarea name="narrator" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="ich-forma, vševědoucí, vztah ke čtenáři..."></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Časoprostor</label>
-                    <textarea name="setting" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="čas a prostředí (místní, sociální)"></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Děj / Dění</label>
-                    <textarea name="plot" rows="3" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2" placeholder="převyprávění, motivy, události, zápletka, rozuzlení..."></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Myšlenkový a emoční obsah</label>
-                    <textarea name="thought_content" rows="2" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2" placeholder="vidění světa, ponaučení, smysl, celkové působení..."></textarea>
-                </div>
-            </div>
-        </div>
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide border-b border-slate-200 dark:border-slate-600 pb-1">Věcný obsah</h4>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Postavy</label>
+                    <textarea name="characters" rows="2" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2" placeholder="hlavní/vedlejší; popis, charakteristika, vývoj, vztahy..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Vypravěč / Lyrický subjekt</label>
+                    <textarea name="narrator" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="ich-forma, vševědoucí, vztah ke čtenáři..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Časoprostor</label>
+                    <textarea name="setting" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="čas a prostředí (místní, sociální)"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Děj / Dění</label>
+                    <textarea name="plot" rows="3" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2" placeholder="převyprávění, motivy, události, zápletka, rozuzlení..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Myšlenkový a emoční obsah</label>
+                    <textarea name="thought_content" rows="2" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2" placeholder="vidění světa, ponaučení, smysl, celkové působení..."></textarea>
+                </div>
+            </div>
+        </div>
 
-        <div class="mb-2 border-l-4 border-blue-100 dark:border-blue-800 pl-4 py-1">
-            <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200 mb-3">Forma</h3>
+        <div class="mb-2 border-l-4 border-blue-100 dark:border-blue-800 pl-4 py-1">
+            <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200 mb-3">Forma</h3>
 
-            <div class="space-y-4 mb-6">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide border-b border-slate-200 dark:border-slate-600 pb-1">Kompozice</h4>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Členění textu</label>
-                        <textarea name="composition_structure" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="kapitoly, strofy, dějství..."></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Slohové postupy</label>
-                        <textarea name="style_procedures" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="vyprávění, popis, charakteristika, úvaha; kombinace..."></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Kompoziční postupy</label>
-                        <textarea name="composition_procedures" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="chronologický, retrospektivní..."></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Kompoziční principy</label>
-                        <textarea name="composition_principles" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="opakování, kontrast..."></textarea>
-                    </div>
-                </div>
-            </div>
+            <div class="space-y-4 mb-6">
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide border-b border-slate-200 dark:border-slate-600 pb-1">Kompozice</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Členění textu</label>
+                        <textarea name="composition_structure" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="kapitoly, strofy, dějství..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Slohové postupy</label>
+                        <textarea name="style_procedures" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="vyprávění, popis, charakteristika, úvaha; kombinace..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Kompoziční postupy</label>
+                        <textarea name="composition_procedures" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="chronologický, retrospektivní..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Kompoziční principy</label>
+                        <textarea name="composition_principles" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="opakování, kontrast..."></textarea>
+                    </div>
+                </div>
+            </div>
 
-            <div class="space-y-4">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide border-b border-slate-200 dark:border-slate-600 pb-1">Výrazové prostředky</h4>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Neverbální</label>
-                    <textarea name="nonverbal" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="ilustrace, grafická úprava textu..."></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Verbální</label>
-                    <textarea name="verbal" rows="4" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="spisovnost, archaismy/neologismy, citové zabarvení, funkčněstylová příslušnost, původ, syntax, figury, tropy..."></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide border-b border-slate-200 dark:border-slate-600 pb-1">Výrazové prostředky</h4>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Neverbální</label>
+                    <textarea name="nonverbal" rows="1" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="ilustrace, grafická úprava textu..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Verbální</label>
+                    <textarea name="verbal" rows="4" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 resize-y" placeholder="spisovnost, archaismy/neologismy, citové zabarvení, funkčněstylová příslušnost, původ, syntax, figury, tropy..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 border-b dark:border-slate-600 pb-2 uppercase tracking-wide">II. Komentář – Jak o textu přemýšlet</h2>
+    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 border-b dark:border-slate-600 pb-2 uppercase tracking-wide">II. Komentář – Jak o textu přemýšlet</h2>
 
-        <div class="space-y-6">
-            <div class="bg-blue-50 dark:bg-blue-950/40 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
-                <label class="block text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Výklad (PROČ a SMYSL)</label>
-                <p class="text-xs text-slate-600 dark:text-slate-400 mb-2 leading-relaxed">
-                    Nejen CO tam je, ale PROČ. Smysl/význam.<br>
-                    <i>Např: Proč zvolil tento žánr? Motivace postav? Smysl postavy v textu? Smysl času/prostoru? Proč téma pojal takto? Smysl kompozice? Co je dominantní a proč?</i>
-                </p>
-                <textarea name="interpretation" rows="6" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 focus:ring-2 focus:ring-blue-500"></textarea>
-            </div>
+        <div class="space-y-6">
+            <div class="bg-blue-50 dark:bg-blue-950/40 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
+                <label class="block text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Výklad (PROČ a SMYSL)</label>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mb-2 leading-relaxed">
+                    Nejen CO tam je, ale PROČ. Smysl/význam.<br>
+                    <i>Např: Proč zvolil tento žánr? Motivace postav? Smysl postavy v textu? Smysl času/prostoru? Proč téma pojal takto? Smysl kompozice? Co je dominantní a proč?</i>
+                </p>
+                <textarea name="interpretation" rows="6" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2 focus:ring-2 focus:ring-blue-500"></textarea>
+            </div>
 
-            <div>
-                <label class="block text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Hodnocení</label>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Posouzení kladů a záporů textu a jeho složek.</p>
-                <textarea name="evaluation" rows="2" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2"></textarea>
-            </div>
-        </div>
-    </div>
+            <div>
+                <label class="block text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Hodnocení</label>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Posouzení kladů a záporů textu a jeho složek.</p>
+                <textarea name="evaluation" rows="2" class="w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 shadow-sm border p-2"></textarea>
+            </div>
+        </div>
+    </div>
 
-    <div class="flex gap-4 pt-4">
-        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-all transform active:scale-[0.98]">
-            💾 Uložit Rozbor
-        </button>
-        <button type="button" id="btn-reset" class="px-6 py-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-lg transition-colors">
-            Nový
-        </button>
-    </div>
+    <div class="flex gap-4 pt-4">
+        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-all transform active:scale-[0.98]">
+            💾 Uložit Rozbor
+        </button>
+        <button type="button" id="btn-reset" class="px-6 py-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-lg transition-colors">
+            Nový
+        </button>
+    </div>
 </form>
-            </div>
+            </div>
 
-            <!-- SIDEBAR -->
-            <div class="lg:col-span-1">
-                <div class="sticky top-8 space-y-6">
+            <!-- SIDEBAR -->
+            <div class="lg:col-span-1">
+                <div class="sticky top-8 space-y-6">
 
-                    <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-                         <button type="button" id="btn-save-sidebar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
-                            💾 Rychlé uložení
-                        </button>
-                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+                         <button type="button" id="btn-save-sidebar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
+                            💾 Rychlé uložení
+                        </button>
+                    </div>
 
-                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-                        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex justify-between items-center">
-                            <h3 class="font-semibold text-slate-800 dark:text-slate-200">Uloženo (<span id="count">0</span>)</h3>
-                            <button id="btn-nuke" class="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium">Smazat vše</button>
-                        </div>
-                        <div id="list-container" class="max-h-[40vh] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700">
-                        </div>
-                    </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex justify-between items-center">
+                            <h3 class="font-semibold text-slate-800 dark:text-slate-200">Uloženo (<span id="count">0</span>)</h3>
+                            <button id="btn-nuke" class="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium">Smazat vše</button>
+                        </div>
+                        <div id="list-container" class="max-h-[40vh] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700">
+                        </div>
+                    </div>
 
-                    <!-- BACKUP Section -->
-                    <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-                        <h3 class="font-bold text-lg mb-2 text-slate-700 dark:text-slate-200">Data & Záloha</h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Prevence proti ztrátě dat. Stáhni si JSON a měj klid.</p>
-                        <div class="flex gap-2">
-                            <button id="btn-backup" class="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-3 rounded text-sm transition-colors">
-                                ⬇️ Export
-                            </button>
-                            <button onclick="document.getElementById('import-file').click()" class="flex-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium py-2 px-3 rounded text-sm transition-colors">
-                                ⬆️ Import
-                            </button>
-                            <input type="file" id="import-file" class="hidden" accept=".json">
-                        </div>
-                    </div>
+                    <!-- BACKUP Section -->
+                    <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+                        <h3 class="font-bold text-lg mb-2 text-slate-700 dark:text-slate-200">Data & Záloha</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Prevence proti ztrátě dat. Stáhni si JSON a měj klid.</p>
+                        <div class="flex gap-2">
+                            <button id="btn-backup" class="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-3 rounded text-sm transition-colors">
+                                ⬇️ Export
+                            </button>
+                            <button onclick="document.getElementById('import-file').click()" class="flex-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium py-2 px-3 rounded text-sm transition-colors">
+                                ⬆️ Import
+                            </button>
+                            <input type="file" id="import-file" class="hidden" accept=".json">
+                        </div>
+                    </div>
 
-                    <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-                        <h3 class="font-bold text-lg mb-2 text-slate-700 dark:text-slate-200">Export PDF</h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Vygeneruje kompletní sborník pro XeLaTeX přesně dle školní struktury.</p>
-                        <button id="btn-generate" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow transition-colors flex items-center justify-center gap-2">
-                            <span>⚡ Generovat LaTeX</span>
-                        </button>
-                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+                        <h3 class="font-bold text-lg mb-2 text-slate-700 dark:text-slate-200">Export PDF</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Vygeneruje kompletní sborník pro XeLaTeX přesně dle školní struktury.</p>
+                        <button id="btn-generate" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow transition-colors flex items-center justify-center gap-2">
+                            <span>⚡ Generovat LaTeX</span>
+                        </button>
+                    </div>
 
-                </div>
-            </div>
-        </div>
-    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- LATEX MODAL -->
-    <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-11/12 max-w-4xl flex flex-col max-h-[90vh] overflow-hidden">
+    <!-- LATEX MODAL -->
+    <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-11/12 max-w-4xl flex flex-col max-h-[90vh] overflow-hidden">
 
-            <div class="p-4 border-b dark:border-slate-700 flex justify-between items-center bg-white dark:bg-slate-800 z-10">
-                <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                    📄 LaTeX Výstup
-                </h3>
-                <button id="btn-close-modal" class="text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 text-2xl leading-none transition-colors">&times;</button>
-            </div>
+            <div class="p-4 border-b dark:border-slate-700 flex justify-between items-center bg-white dark:bg-slate-800 z-10">
+                <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                    📄 LaTeX Výstup
+                </h3>
+                <button id="btn-close-modal" class="text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 text-2xl leading-none transition-colors">&times;</button>
+            </div>
 
-            <!-- WARNING BAR -->
-            <div class="bg-red-50 dark:bg-red-950/50 border-l-8 border-red-600 p-4">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <span class="text-red-600 text-2xl animate-pulse">⚠️</span>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-bold text-red-900 dark:text-red-300 uppercase tracking-wide">
-                            Fatální chyba nastavení Overleafu
-                        </p>
-                        <p class="text-sm text-red-800 dark:text-red-400 mt-1">
-                            Tento kód <strong>NEBUDE FUNGOVAT</strong>, pokud ručně nezměníte kompilátor na <span class="bg-red-200 dark:bg-red-800 px-1 rounded font-black">XeLaTeX</span>. Výchozí pdfLaTeX neumí české fonty.
-                        </p>
-                        <p class="text-xs text-red-600 dark:text-red-500 mt-2">
-                            Menu (vlevo nahoře) &rarr; Compiler &rarr; XeLaTeX
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <!-- WARNING BAR -->
+            <div class="bg-red-50 dark:bg-red-950/50 border-l-8 border-red-600 p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <span class="text-red-600 text-2xl animate-pulse">⚠️</span>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-bold text-red-900 dark:text-red-300 uppercase tracking-wide">
+                            Fatální chyba nastavení Overleafu
+                        </p>
+                        <p class="text-sm text-red-800 dark:text-red-400 mt-1">
+                            Tento kód <strong>NEBUDE FUNGOVAT</strong>, pokud ručně nezměníte kompilátor na <span class="bg-red-200 dark:bg-red-800 px-1 rounded font-black">XeLaTeX</span>. Výchozí pdfLaTeX neumí české fonty.
+                        </p>
+                        <p class="text-xs text-red-600 dark:text-red-500 mt-2">
+                            Menu (vlevo nahoře) &rarr; Compiler &rarr; XeLaTeX
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-            <div class="flex-1 p-0 relative min-h-0">
-                <textarea id="output-code" class="w-full h-full p-4 font-mono text-xs bg-slate-50 dark:bg-slate-900 dark:text-slate-300 resize-none focus:outline-none text-slate-700" readonly></textarea>
-            </div>
+            <div class="flex-1 p-0 relative min-h-0">
+                <textarea id="output-code" class="w-full h-full p-4 font-mono text-xs bg-slate-50 dark:bg-slate-900 dark:text-slate-300 resize-none focus:outline-none text-slate-700" readonly></textarea>
+            </div>
 
-            <!-- GATEKEEPER FOOTER -->
-            <div class="p-4 border-t dark:border-slate-700 bg-white dark:bg-slate-800 z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <!-- GATEKEEPER FOOTER -->
+            <div class="p-4 border-t dark:border-slate-700 bg-white dark:bg-slate-800 z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
 
-                <label class="mb-4 flex items-center justify-end gap-2 bg-red-50 dark:bg-red-950/40 p-3 rounded border border-red-100 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-950/60 transition-colors cursor-pointer select-none">
-                    <input type="checkbox" id="acknowledge-check" class="w-5 h-5 text-red-600 rounded border-gray-300 dark:border-slate-600 focus:ring-red-500 cursor-pointer">
-                    <span class="ml-2 block text-sm font-bold text-red-900 dark:text-red-300">
-                        Rozumím, že musím v Overleafu přepnout na XeLaTeX, jinak to bouchne.
-                    </span>
-                </label>
+                <label class="mb-4 flex items-center justify-end gap-2 bg-red-50 dark:bg-red-950/40 p-3 rounded border border-red-100 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-950/60 transition-colors cursor-pointer select-none">
+                    <input type="checkbox" id="acknowledge-check" class="w-5 h-5 text-red-600 rounded border-gray-300 dark:border-slate-600 focus:ring-red-500 cursor-pointer">
+                    <span class="ml-2 block text-sm font-bold text-red-900 dark:text-red-300">
+                        Rozumím, že musím v Overleafu přepnout na XeLaTeX, jinak to bouchne.
+                    </span>
+                </label>
 
-                <div class="flex flex-col sm:flex-row justify-end gap-3">
-                    <button id="btn-copy" disabled class="px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-all text-sm font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                        📋 Pouze zkopírovat
-                    </button>
-                    <button id="btn-overleaf" disabled class="px-4 py-2.5 bg-green-700 hover:bg-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-bold flex items-center justify-center gap-2 group disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:shadow-none disabled:cursor-not-allowed">
-                        <span>Zkopírovat & Otevřít Overleaf</span>
-                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                    </button>
-                </div>
-            </div>
+                <div class="flex flex-col sm:flex-row justify-end gap-3">
+                    <button id="btn-copy" disabled class="px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-all text-sm font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        📋 Pouze zkopírovat
+                    </button>
+                    <button id="btn-overleaf" disabled class="px-4 py-2.5 bg-green-700 hover:bg-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-bold flex items-center justify-center gap-2 group disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:shadow-none disabled:cursor-not-allowed">
+                        <span>Zkopírovat & Otevřít Overleaf</span>
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </button>
+                </div>
+            </div>
 
-        </div>
-    </div>
+        </div>
+    </div>
 
-    <!-- IMPORT MODAL -->
-    <div id="import-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-96 max-w-full overflow-hidden transform transition-all scale-100">
-            <div class="p-6 text-center">
-                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 mb-4">
-                    <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                </div>
-                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-slate-100" id="import-title">Nalezeno dat: <span id="import-count">0</span></h3>
-                <div class="mt-2">
-                    <p class="text-sm text-gray-500 dark:text-slate-400">
-                        Jak chceš s novými daty naložit?
-                    </p>
-                </div>
-            </div>
-            <div class="bg-gray-50 dark:bg-slate-800/80 px-4 py-3 sm:px-6 sm:flex sm:flex-col sm:gap-3">
-                <button id="btn-import-merge" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
-                    Sloučit (Bezpečné)
-                </button>
-                <p class="text-xs text-center text-gray-400 dark:text-slate-500">Zachová existující, přidá nové.</p>
+    <!-- IMPORT MODAL -->
+    <div id="import-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-96 max-w-full overflow-hidden transform transition-all scale-100">
+            <div class="p-6 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 mb-4">
+                    <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-slate-100" id="import-title">Nalezeno dat: <span id="import-count">0</span></h3>
+                <div class="mt-2">
+                    <p class="text-sm text-gray-500 dark:text-slate-400">
+                        Jak chceš s novými daty naložit?
+                    </p>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800/80 px-4 py-3 sm:px-6 sm:flex sm:flex-col sm:gap-3">
+                <button id="btn-import-merge" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
+                    Sloučit (Bezpečné)
+                </button>
+                <p class="text-xs text-center text-gray-400 dark:text-slate-500">Zachová existující, přidá nové.</p>
 
-                <button id="btn-import-overwrite" class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm sm:mt-0">
-                    Přepsat vše (Smazat staré)
-                </button>
-                <p class="text-xs text-center text-gray-400 dark:text-slate-500">Smaže aktuální data a nahradí je.</p>
+                <button id="btn-import-overwrite" class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm sm:mt-0">
+                    Přepsat vše (Smazat staré)
+                </button>
+                <p class="text-xs text-center text-gray-400 dark:text-slate-500">Smaže aktuální data a nahradí je.</p>
 
-                <button id="btn-import-cancel" class="mt-4 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-slate-600 shadow-sm px-4 py-2 bg-white dark:bg-slate-700 text-base font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none sm:text-sm">
-                    Zrušit
-                </button>
-            </div>
-        </div>
-    </div>
+                <button id="btn-import-cancel" class="mt-4 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-slate-600 shadow-sm px-4 py-2 bg-white dark:bg-slate-700 text-base font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none sm:text-sm">
+                    Zrušit
+                </button>
+            </div>
+        </div>
+    </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Auto-resize logic
-    const autoResize = (el) => {
-        el.style.height = 'auto';
-        el.style.height = el.scrollHeight + 'px';
-    };
+    // Auto-resize logic
+    const autoResize = (el) => {
+        el.style.height = 'auto';
+        el.style.height = el.scrollHeight + 'px';
+    };
 
-    // Apply to all form textareas
-    document.querySelectorAll('#analysis-form textarea').forEach(ta => {
-        ta.style.overflow = 'hidden';
-        ta.style.resize = 'none';
-        ta.addEventListener('input', () => autoResize(ta));
-        
-        // Init on load
-        setTimeout(() => autoResize(ta), 0); 
-    });
-    // ========== DARK MODE TOGGLE ==========
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
-    }
+    // Apply to all form textareas
+    document.querySelectorAll('#analysis-form textarea').forEach(ta => {
+        ta.style.overflow = 'hidden';
+        ta.style.resize = 'none';
+        ta.addEventListener('input', () => autoResize(ta));
+        
+        // Init on load
+        setTimeout(() => autoResize(ta), 0); 
+    });
+    // ========== DARK MODE TOGGLE ==========
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    }
 
-    // config
-    const DB_KEY = 'literarni_spravce_db_v4';
-    const form = document.getElementById('analysis-form');
-    const listContainer = document.getElementById('list-container');
-    let db = [];
+    // config
+    const DB_KEY = 'literarni_spravce_db_v4';
+    const form = document.getElementById('analysis-form');
+    const listContainer = document.getElementById('list-container');
+    let db = [];
 
-    let importedDataTemp = null;
+    let importedDataTemp = null;
 
-    const uuid = () => {
-        if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
-        return Date.now().toString(36) + Math.random().toString(36).substr(2);
-    };
+    const uuid = () => {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    };
 
-    const initData = () => {
-        try {
-            const raw = localStorage.getItem(DB_KEY);
-            db = JSON.parse(raw || '[]');
+    const initData = () => {
+        try {
+            const raw = localStorage.getItem(DB_KEY);
+            db = JSON.parse(raw || '[]');
 
-            let migrated = false;
-            db = db.map(item => {
-                if (!item.uid) {
-                    item.uid = uuid();
-                    migrated = true;
-                }
-                return item;
-            });
+            let migrated = false;
+            db = db.map(item => {
+                if (!item.uid) {
+                    item.uid = uuid();
+                    migrated = true;
+                }
+                return item;
+            });
 
-            if (migrated) {
-                saveToDb();
-                console.log('Migrated legacy data to UUID structure.');
-            }
-        } catch (e) {
-            console.error('Data load error', e);
-            db = [];
-        }
-    };
+            if (migrated) {
+                saveToDb();
+                console.log('Migrated legacy data to UUID structure.');
+            }
+        } catch (e) {
+            console.error('Data load error', e);
+            db = [];
+        }
+    };
 
-    const saveToDb = () => {
-        try {
-            localStorage.setItem(DB_KEY, JSON.stringify(db));
-            renderList();
-        } catch (e) { alert('Storage quota exceeded!'); }
-    };
+    const saveToDb = () => {
+        try {
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+            renderList();
+        } catch (e) { alert('Storage quota exceeded!'); }
+    };
 
-    const renderList = (activeId = null) => {
-        if (!listContainer) return;
+    const renderList = (activeId = null) => {
+        if (!listContainer) return;
 
-        const countEl = document.getElementById('count');
-        if (countEl) countEl.textContent = db.length;
+        const countEl = document.getElementById('count');
+        if (countEl) countEl.textContent = db.length;
 
-        listContainer.innerHTML = '';
+        listContainer.innerHTML = '';
 
-        if (!db.length) {
-            listContainer.innerHTML = '<div class="p-4 text-sm text-slate-400 dark:text-slate-500 text-center">Žádné uložené rozbory.</div>';
-            return;
-        }
+        if (!db.length) {
+            listContainer.innerHTML = '<div class="p-4 text-sm text-slate-400 dark:text-slate-500 text-center">Žádné uložené rozbory.</div>';
+            return;
+        }
 
-        const sorted = [...db].sort((a, b) => a.title.localeCompare(b.title));
+        const sorted = [...db].sort((a, b) => a.title.localeCompare(b.title));
 
-        sorted.forEach((item) => {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'list-item p-3 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors group flex justify-between items-center border-b border-slate-50 dark:border-slate-700 last:border-0';
-            wrapper.dataset.uid = item.uid;
+        sorted.forEach((item) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'list-item p-3 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors group flex justify-between items-center border-b border-slate-50 dark:border-slate-700 last:border-0';
+            wrapper.dataset.uid = item.uid;
 
-            if (activeId === item.uid) {
-                wrapper.classList.add('item-active');
-            }
+            if (activeId === item.uid) {
+                wrapper.classList.add('item-active');
+            }
 
-            const infoDiv = document.createElement('div');
-            infoDiv.className = 'cursor-pointer flex-1 truncate';
-            infoDiv.onclick = () => window.loadEntry(item.uid);
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'cursor-pointer flex-1 truncate';
+            infoDiv.onclick = () => window.loadEntry(item.uid);
 
-            const titleEl = document.createElement('div');
-            titleEl.className = 'font-medium text-slate-800 dark:text-slate-200 truncate';
-            titleEl.textContent = item.title;
+            const titleEl = document.createElement('div');
+            titleEl.className = 'font-medium text-slate-800 dark:text-slate-200 truncate';
+            titleEl.textContent = item.title;
 
-            const authorEl = document.createElement('div');
-            authorEl.className = 'text-xs text-slate-500 dark:text-slate-400 truncate';
-            authorEl.textContent = item.author;
+            const authorEl = document.createElement('div');
+            authorEl.className = 'text-xs text-slate-500 dark:text-slate-400 truncate';
+            authorEl.textContent = item.author;
 
-            infoDiv.append(titleEl, authorEl);
+            infoDiv.append(titleEl, authorEl);
 
-            const delBtn = document.createElement('button');
-            delBtn.className = 'opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 dark:text-red-500 dark:hover:text-red-400 p-1 ml-2 transition-opacity';
-            delBtn.title = 'Smazat';
-            delBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
-            delBtn.onclick = (e) => {
-                e.stopPropagation();
-                window.deleteEntry(item.uid);
-            };
+            const delBtn = document.createElement('button');
+            delBtn.className = 'opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 dark:text-red-500 dark:hover:text-red-400 p-1 ml-2 transition-opacity';
+            delBtn.title = 'Smazat';
+            delBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
+            delBtn.onclick = (e) => {
+                e.stopPropagation();
+                window.deleteEntry(item.uid);
+            };
 
-            wrapper.append(infoDiv, delBtn);
-            listContainer.appendChild(wrapper);
-        });
-    };
+            wrapper.append(infoDiv, delBtn);
+            listContainer.appendChild(wrapper);
+        });
+    };
 
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-            const entry = Object.fromEntries(formData.entries());
-            const currentId = document.getElementById('entry-id').value;
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const entry = Object.fromEntries(formData.entries());
+            const currentId = document.getElementById('entry-id').value;
 
-            if (currentId) {
-                const idx = db.findIndex(item => item.uid === currentId);
-                if (idx > -1) {
-                    db[idx] = { ...entry, uid: currentId };
-                    showToast('Aktualizováno');
-                } else {
-                    entry.uid = uuid();
-                    db.push(entry);
-                    document.getElementById('entry-id').value = entry.uid;
-                    showToast('Uloženo jako nový');
-                }
-            } else {
-                entry.uid = uuid();
-                db.push(entry);
-                document.getElementById('entry-id').value = entry.uid;
-                showToast('Uloženo');
-            }
+            if (currentId) {
+                const idx = db.findIndex(item => item.uid === currentId);
+                if (idx > -1) {
+                    db[idx] = { ...entry, uid: currentId };
+                    showToast('Aktualizováno');
+                } else {
+                    entry.uid = uuid();
+                    db.push(entry);
+                    document.getElementById('entry-id').value = entry.uid;
+                    showToast('Uloženo jako nový');
+                }
+            } else {
+                entry.uid = uuid();
+                db.push(entry);
+                document.getElementById('entry-id').value = entry.uid;
+                showToast('Uloženo');
+            }
 
-            saveToDb();
-            renderList(document.getElementById('entry-id').value);
-        });
-    }
+            saveToDb();
+            renderList(document.getElementById('entry-id').value);
+        });
+    }
 
-    const btnSaveSidebar = document.getElementById('btn-save-sidebar');
-    if (btnSaveSidebar) {
-        btnSaveSidebar.addEventListener('click', () => {
-            if (form) form.requestSubmit();
-        });
-    }
+    const btnSaveSidebar = document.getElementById('btn-save-sidebar');
+    if (btnSaveSidebar) {
+        btnSaveSidebar.addEventListener('click', () => {
+            if (form) form.requestSubmit();
+        });
+    }
 
-    window.loadEntry = (uid) => {
-        const data = db.find(item => item.uid === uid);
-        if (!data) return showToast('Chyba: Položka nenalezena');
+    window.loadEntry = (uid) => {
+        const data = db.find(item => item.uid === uid);
+        if (!data) return showToast('Chyba: Položka nenalezena');
 
-        if (form) {
-            Object.keys(data).forEach(key => {
-                const input = form.elements[key];
-                if (input) {
-                    input.value = data[key];
-                    if (input.tagName === 'TEXTAREA') autoResize(input);
-                }
-            });
+        if (form) {
+            Object.keys(data).forEach(key => {
+                const input = form.elements[key];
+                if (input) {
+                    input.value = data[key];
+                    if (input.tagName === 'TEXTAREA') autoResize(input);
+                }
+            });
 
-            const entryIdInput = document.getElementById('entry-id');
-            if (entryIdInput) entryIdInput.value = uid;
-        }
+            const entryIdInput = document.getElementById('entry-id');
+            if (entryIdInput) entryIdInput.value = uid;
+        }
 
-        renderList(uid);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+        renderList(uid);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-    window.deleteEntry = (uid) => {
-        if (confirm('Opravdu smazat tento rozbor?')) {
-            db = db.filter(item => item.uid !== uid);
-            saveToDb();
+    window.deleteEntry = (uid) => {
+        if (confirm('Opravdu smazat tento rozbor?')) {
+            db = db.filter(item => item.uid !== uid);
+            saveToDb();
 
-            const entryIdInput = document.getElementById('entry-id');
-            if (entryIdInput && entryIdInput.value === uid) {
-                resetForm();
-            }
-        }
-    };
+            const entryIdInput = document.getElementById('entry-id');
+            if (entryIdInput && entryIdInput.value === uid) {
+                resetForm();
+            }
+        }
+    };
 
-    const resetForm = () => {
-        if (form) form.reset();
-        document.querySelectorAll('#analysis-form textarea').forEach(ta => autoResize(ta));
-        const entryIdInput = document.getElementById('entry-id');
-        if (entryIdInput) entryIdInput.value = '';
-        renderList(null);
-        showToast('Formulář vyčištěn');
-    };
+    const resetForm = () => {
+        if (form) form.reset();
+        document.querySelectorAll('#analysis-form textarea').forEach(ta => autoResize(ta));
+        const entryIdInput = document.getElementById('entry-id');
+        if (entryIdInput) entryIdInput.value = '';
+        renderList(null);
+        showToast('Formulář vyčištěn');
+    };
 
-    const btnReset = document.getElementById('btn-reset');
-    if (btnReset) btnReset.onclick = resetForm;
+    const btnReset = document.getElementById('btn-reset');
+    if (btnReset) btnReset.onclick = resetForm;
 
-    const btnNuke = document.getElementById('btn-nuke');
-    if (btnNuke) {
-        btnNuke.onclick = () => {
-            if (confirm('VAROVÁNÍ: Toto smaže VŠECHNY uložené rozbory. Pokračovat?')) {
-                db = [];
-                saveToDb();
-                resetForm();
-            }
-        };
-    }
+    const btnNuke = document.getElementById('btn-nuke');
+    if (btnNuke) {
+        btnNuke.onclick = () => {
+            if (confirm('VAROVÁNÍ: Toto smaže VŠECHNY uložené rozbory. Pokračovat?')) {
+                db = [];
+                saveToDb();
+                resetForm();
+            }
+        };
+    }
 
-    const importModal = document.getElementById('import-modal');
-    const btnImportMerge = document.getElementById('btn-import-merge');
-    const btnImportOverwrite = document.getElementById('btn-import-overwrite');
-    const btnImportCancel = document.getElementById('btn-import-cancel');
+    const importModal = document.getElementById('import-modal');
+    const btnImportMerge = document.getElementById('btn-import-merge');
+    const btnImportOverwrite = document.getElementById('btn-import-overwrite');
+    const btnImportCancel = document.getElementById('btn-import-cancel');
 
-    const closeImportModal = () => {
-        importModal.classList.add('hidden');
-        importModal.classList.remove('flex');
-        importedDataTemp = null;
-        const fileInput = document.getElementById('import-file');
-        if (fileInput) fileInput.value = '';
-    };
+    const closeImportModal = () => {
+        importModal.classList.add('hidden');
+        importModal.classList.remove('flex');
+        importedDataTemp = null;
+        const fileInput = document.getElementById('import-file');
+        if (fileInput) fileInput.value = '';
+    };
 
-    if (btnImportCancel) btnImportCancel.onclick = closeImportModal;
+    if (btnImportCancel) btnImportCancel.onclick = closeImportModal;
 
-    if (btnImportMerge) {
-        btnImportMerge.onclick = () => {
-            if (!importedDataTemp) return;
-            let added = 0;
-            importedDataTemp.forEach(newItem => {
-                if (!db.find(existing => existing.uid === newItem.uid)) {
-                    db.push(newItem);
-                    added++;
-                }
-            });
-            saveToDb();
-            renderList();
-            showToast(`Sloučeno. Přidáno ${added} nových.`);
-            closeImportModal();
-        };
-    }
+    if (btnImportMerge) {
+        btnImportMerge.onclick = () => {
+            if (!importedDataTemp) return;
+            let added = 0;
+            importedDataTemp.forEach(newItem => {
+                if (!db.find(existing => existing.uid === newItem.uid)) {
+                    db.push(newItem);
+                    added++;
+                }
+            });
+            saveToDb();
+            renderList();
+            showToast(`Sloučeno. Přidáno ${added} nových.`);
+            closeImportModal();
+        };
+    }
 
-    if (btnImportOverwrite) {
-        btnImportOverwrite.onclick = () => {
-            if (!importedDataTemp) return;
-            db = importedDataTemp;
-            saveToDb();
-            renderList();
-            showToast('Databáze kompletně přepsána.');
-            closeImportModal();
-        };
-    }
+    if (btnImportOverwrite) {
+        btnImportOverwrite.onclick = () => {
+            if (!importedDataTemp) return;
+            db = importedDataTemp;
+            saveToDb();
+            renderList();
+            showToast('Databáze kompletně přepsána.');
+            closeImportModal();
+        };
+    }
 
-    const btnBackup = document.getElementById('btn-backup');
-    if (btnBackup) {
-        btnBackup.onclick = () => {
-            if (!db || !db.length) return showToast('Žádná data k záloze.');
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "rozbory_backup_" + new Date().toISOString().slice(0,10) + ".json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            showToast('Záloha stažena');
-        };
-    }
+    const btnBackup = document.getElementById('btn-backup');
+    if (btnBackup) {
+        btnBackup.onclick = () => {
+            if (!db || !db.length) return showToast('Žádná data k záloze.');
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "rozbory_backup_" + new Date().toISOString().slice(0,10) + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showToast('Záloha stažena');
+        };
+    }
 
-    const importFile = document.getElementById('import-file');
-    if (importFile) {
-        importFile.onchange = (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
+    const importFile = document.getElementById('import-file');
+    if (importFile) {
+        importFile.onchange = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported)) {
-                         if (imported.length > 0 && !imported[0].title) throw new Error("Invalid structure");
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                         if (imported.length > 0 && !imported[0].title) throw new Error("Invalid structure");
 
-                        importedDataTemp = imported;
-                        document.getElementById('import-count').textContent = imported.length;
+                        importedDataTemp = imported;
+                        document.getElementById('import-count').textContent = imported.length;
 
-                        importModal.classList.remove('hidden');
-                        importModal.classList.add('flex');
+                        importModal.classList.remove('hidden');
+                        importModal.classList.add('flex');
 
-                    } else {
-                        alert('Soubor neobsahuje validní seznam rozborů.');
-                        event.target.value = '';
-                    }
-                } catch (ex) {
-                    alert('Chyba při čtení souboru. Je to validní JSON záloha?');
-                    console.error(ex);
-                    event.target.value = '';
-                }
-            };
-            reader.readAsText(file);
-        };
-    }
+                    } else {
+                        alert('Soubor neobsahuje validní seznam rozborů.');
+                        event.target.value = '';
+                    }
+                } catch (ex) {
+                    alert('Chyba při čtení souboru. Je to validní JSON záloha?');
+                    console.error(ex);
+                    event.target.value = '';
+                }
+            };
+            reader.readAsText(file);
+        };
+    }
 
-    // latex generator
-    const latexMap = {
-        '\\': '\\textbackslash{}',
-        '&': '\\&', '%': '\\%', '$': '\\$', '#': '\\#',
-        '_': '\\_', '{': '\\{', '}': '\\}',
-        '~': '\\textasciitilde{}', '^': '\\textasciicircum{}',
-        '\n': '\\newline '
-    };
+    // latex generator
+    const latexMap = {
+        '\\': '\\textbackslash{}',
+        '&': '\\&', '%': '\\%', '$': '\\$', '#': '\\#',
+        '_': '\\_', '{': '\\{', '}': '\\}',
+        '~': '\\textasciitilde{}', '^': '\\textasciicircum{}',
+        '\n': '\\newline '
+    };
 
-const esc = (text) => {
-        if (!text) return '-';
-        // Trim to prevent trailing newlines from breaking tables
-        const sanitized = text.trim().replace(/[^\w\s\d\.,;:!\?\(\)\-\–\—„""'/\\&%\$#_{}~^áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽäöüßÄÖÜĺľščťžýáíéóúňďĽŠČŤŽÝÁÍÉÓÚŇĎ]/g, '');
-        return sanitized.replace(/[\\&%\$#_{}~^\n]/g, char => latexMap[char]);
-    };
+    const esc = (text) => {
+        if (!text) return '-';
+        const sanitized = text.replace(/[^\w\s\d\.,;:!\?\(\)\-\–\—„""'/\\&%\$#_{}~^áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽäöüßÄÖÜĺľščťžýáíéóúňďĽŠČŤŽÝÁÍÉÓÚŇĎ]/g, '');
+        return sanitized.replace(/[\\&%\$#_{}~^\n]/g, char => latexMap[char]);
+    };
 
-    const genRow = (label, value) => {
-        // Removed parbox for better spacing
-        return `\\textbf{${label}:} & ${esc(value)} \\\\ \n\\midrule\n`;
-    };
+    const genRow = (label, value) => {
+        return `\\textbf{${label}:} & \\parbox[t]{10.0cm}{${esc(value)}} \\\\ \n\\midrule\n`;
+    };
 
-    const generateLatex = () => {
-        if (!db.length) return alert('Nemám žádná data k exportu.');
-        const sorted = [...db].sort((a, b) => a.title.localeCompare(b.title));
+    const generateLatex = () => {
+        if (!db.length) return alert('Nemám žádná data k exportu.');
+        const sorted = [...db].sort((a, b) => a.title.localeCompare(b.title));
 
-        const content = sorted.map(d => `
+        const content = sorted.map(d => `
 \\clearpage
 \\section*{${esc(d.title)} (${esc(d.author)})}
 \\addcontentsline{toc}{section}{${esc(d.title)} (${esc(d.author)})}
 
 \\begin{center}
-    \\large\\textbf{Charakteristika, analýza a interpretace uměleckého textu}
+    \\large\\textbf{Charakteristika, analýza a interpretace uměleckého textu}
 \\end{center}
 \\vspace{0.5cm}
 
@@ -713,14 +711,15 @@ const esc = (text) => {
 \\section*{TEXT A JEHO SLOŽKY – ČEHO SI V TEXTU VŠÍMAT}
 
 \\subsection*{Základní údaje}
-\\begin{longtable}{p{4.5cm} p{11.0cm}}
+\\begin{tabular}{p{5.5cm} p{10.0cm}}
 \\toprule
 ${genRow('Literární druh a žánr', d.kind_genre)}
 ${genRow('Kontext', d.context)}
-\\end{longtable}
+\\bottomrule
+\\end{tabular}
 
 \\subsection*{Obsah}
-\\begin{longtable}{p{4.5cm} p{11.0cm}}
+\\begin{tabular}{p{5.5cm} p{10.0cm}}
 \\toprule
 ${genRow('Téma', d.theme)}
 \\multicolumn{2}{l}{\\textbf{Věcný obsah:}} \\\\ \\midrule
@@ -729,24 +728,27 @@ ${genRow('Vypravěč / Lyrický subjekt', d.narrator)}
 ${genRow('Časoprostor', d.setting)}
 ${genRow('Děj/Dění', d.plot)}
 ${genRow('Myšlenkový a emoční obsah', d.thought_content)}
-\\end{longtable}
+\\bottomrule
+\\end{tabular}
 
 \\subsection*{Forma}
 \\subsubsection*{Kompozice}
-\\begin{longtable}{p{4.5cm} p{11.0cm}}
+\\begin{tabular}{p{5.5cm} p{10.0cm}}
 \\toprule
 ${genRow('Členění textu', d.composition_structure)}
 ${genRow('Slohové postupy', d.style_procedures)}
 ${genRow('Kompoziční postupy', d.composition_procedures)}
 ${genRow('Kompoziční principy', d.composition_principles)}
-\\end{longtable}
+\\bottomrule
+\\end{tabular}
 
 \\subsubsection*{Výrazové prostředky}
-\\begin{longtable}{p{4.5cm} p{11.0cm}}
+\\begin{tabular}{p{5.5cm} p{10.0cm}}
 \\toprule
 ${genRow('Neverbální', d.nonverbal)}
 ${genRow('Verbální', d.verbal)}
-\\end{longtable}
+\\bottomrule
+\\end{tabular}
 
 % PART II
 \\section*{KOMENTÁŘ – JAK O TEXTU PŘEMÝŠLET}
@@ -761,7 +763,7 @@ ${esc(d.evaluation)}
 \\rule{\\textwidth}{0.5pt}
 `).join('');
 
-        const template = \`\\documentclass[11pt, a4paper]{article}
+        const template = `\\documentclass[11pt, a4paper]{article}
 \\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \\usepackage{fontspec}
 \\usepackage[czech, bidi=basic, provide=*]{babel}
@@ -769,8 +771,7 @@ ${esc(d.evaluation)}
 
 \\renewcommand{\\familydefault}{\\sfdefault}
 
-% Added longtable to required packages
-\\usepackage{parskip, booktabs, fancyhdr, hyperref, longtable}
+\\usepackage{parskip, booktabs, fancyhdr, hyperref}
 \\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=cyan, pdftitle={Maturitní Sborník}}
 \\pagestyle{fancy} \\fancyhead[L]{\\nouppercase{\\rightmark}} \\fancyhead[R]{\\thepage} \\fancyfoot{}
 
@@ -781,104 +782,98 @@ ${esc(d.evaluation)}
 {\\large Vygenerováno aplikací Správce literárních rozborů}
 \\end{titlepage}
 \\clearpage \\tableofcontents \\clearpage
-\${content}
-\\end{document}\`;
+${content}
+\\end{document}`;
 
-        const outputCode = document.getElementById('output-code');
-        if (outputCode) outputCode.value = template;
+        const outputCode = document.getElementById('output-code');
+        if (outputCode) outputCode.value = template;
 
-        const modal = document.getElementById('modal');
-        if (modal) {
-            const hasAck = localStorage.getItem('latex_ack') === 'true';
-            const checkbox = document.getElementById('acknowledge-check');
-            if(checkbox) checkbox.checked = hasAck;
-            toggleButtons(hasAck);
+        const modal = document.getElementById('modal');
+        if (modal) {
+            const hasAck = localStorage.getItem('latex_ack') === 'true';
+            const checkbox = document.getElementById('acknowledge-check');
+            if(checkbox) checkbox.checked = hasAck;
+            toggleButtons(hasAck);
 
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-    };
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    };
 
-    const toggleButtons = (enabled) => {
-        const btnCopy = document.getElementById('btn-copy');
-        const btnOverleaf = document.getElementById('btn-overleaf');
-        if(btnCopy) btnCopy.disabled = !enabled;
-        if(btnOverleaf) btnOverleaf.disabled = !enabled;
-    };
+    const toggleButtons = (enabled) => {
+        const btnCopy = document.getElementById('btn-copy');
+        const btnOverleaf = document.getElementById('btn-overleaf');
+        if(btnCopy) btnCopy.disabled = !enabled;
+        if(btnOverleaf) btnOverleaf.disabled = !enabled;
+    };
 
-    const ackCheckbox = document.getElementById('acknowledge-check');
-    if(ackCheckbox) {
-        ackCheckbox.onchange = (e) => {
-            const checked = e.target.checked;
-            toggleButtons(checked);
-            localStorage.setItem('latex_ack', checked ? 'true' : 'false');
-        };
-    }
+    const ackCheckbox = document.getElementById('acknowledge-check');
+    if(ackCheckbox) {
+        ackCheckbox.onchange = (e) => {
+            const checked = e.target.checked;
+            toggleButtons(checked);
+            localStorage.setItem('latex_ack', checked ? 'true' : 'false');
+        };
+    }
 
-    const btnGenerate = document.getElementById('btn-generate');
-    if (btnGenerate) btnGenerate.onclick = generateLatex;
+    const btnGenerate = document.getElementById('btn-generate');
+    if (btnGenerate) btnGenerate.onclick = generateLatex;
 
-    const showToast = (msg) => {
-        const isDark = document.documentElement.classList.contains('dark');
-        const t = document.createElement('div');
-        t.className = `fixed bottom-4 right-4 ${isDark ? 'bg-slate-700 text-slate-100' : 'bg-slate-800 text-white'} px-4 py-2 rounded shadow-lg z-50 text-sm animate-bounce`;
-        t.innerText = msg;
-        document.body.appendChild(t);
-        setTimeout(() => t.remove(), 2000);
-    };
+    const showToast = (msg) => {
+        const isDark = document.documentElement.classList.contains('dark');
+        const t = document.createElement('div');
+        t.className = `fixed bottom-4 right-4 ${isDark ? 'bg-slate-700 text-slate-100' : 'bg-slate-800 text-white'} px-4 py-2 rounded shadow-lg z-50 text-sm animate-bounce`;
+        t.innerText = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2000);
+    };
 
-    const copyToClipboard = async () => {
-        const txt = document.getElementById('output-code');
-        if (!txt) return;
-        txt.select();
-        try {
-            await navigator.clipboard.writeText(txt.value);
-            return true;
-        } catch (err) {
-            document.execCommand('copy');
-            return true;
-        }
-    };
+    const copyToClipboard = async () => {
+        const txt = document.getElementById('output-code');
+        if (!txt) return;
+        txt.select();
+        try {
+            await navigator.clipboard.writeText(txt.value);
+            return true;
+        } catch (err) {
+            document.execCommand('copy');
+            return true;
+        }
+    };
 
-    const btnCopy = document.getElementById('btn-copy');
-    if (btnCopy) {
-        btnCopy.onclick = async () => {
-            await copyToClipboard();
-            showToast('Zkopírováno!');
-        };
-    }
+    const btnCopy = document.getElementById('btn-copy');
+    if (btnCopy) {
+        btnCopy.onclick = async () => {
+            await copyToClipboard();
+            showToast('Zkopírováno!');
+        };
+    }
 
-    const btnOverleaf = document.getElementById('btn-overleaf');
-    if (btnOverleaf) {
-        btnOverleaf.onclick = async () => {
-            await copyToClipboard();
-            showToast('Zkopírováno! Otevírám Overleaf...');
-            setTimeout(() => {
-                window.open('https://www.overleaf.com/project', '_blank');
-            }, 800);
-        };
-    }
+    const btnOverleaf = document.getElementById('btn-overleaf');
+    if (btnOverleaf) {
+        btnOverleaf.onclick = async () => {
+            await copyToClipboard();
+            showToast('Zkopírováno! Otevírám Overleaf...');
+            setTimeout(() => {
+                window.open('https://www.overleaf.com/project', '_blank');
+            }, 800);
+        };
+    }
 
-    const btnCloseModal = document.getElementById('btn-close-modal');
-    if (btnCloseModal) {
-        btnCloseModal.onclick = () => {
-            const modal = document.getElementById('modal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        };
-    }
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    if (btnCloseModal) {
+        btnCloseModal.onclick = () => {
+            const modal = document.getElementById('modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        };
+    }
 
-    initData();
-    renderList();
+    initData();
+    renderList();
 });
 </script>
 </body>
 </html>
-
-
-
-
-
-
